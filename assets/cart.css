@@ -20,6 +20,7 @@
 }
 
 /* Cart pill */
+.gp-cart-pill[hidden] { display: none !important; }
 .gp-cart-pill {
   position: fixed; right: 20px; bottom: 20px; z-index: 90;
   display: inline-flex; align-items: center; gap: 12px;

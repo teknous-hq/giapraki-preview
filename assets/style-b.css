@@ -193,8 +193,19 @@ button { font-family: inherit; }
 
 /* Mobile */
 @media (max-width: 900px) {
-  .nav ul { display: none; }
+  .nav ul { gap: 18px; }
   .foot-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 700px) {
+  /* Desktop nav links + actions hidden; mobile-nav-b.css/.js handle it. */
+  .nav ul { display: none; }
+
+  /* Prevent flex items from refusing to shrink below content size */
+  .search-bar { flex-wrap: wrap; max-width: 100%; padding: 6px 6px 6px 14px; }
+  .search-bar input,
+  .search-bar select { min-width: 0; }
+  .search-bar select { padding: 0 8px; }
+  .search-bar > .btn { width: 100%; margin-left: 0 !important; margin-top: 6px; }
 }
 @media (max-width: 600px) {
   .wrap { padding: 0 20px; }
