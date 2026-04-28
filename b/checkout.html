@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Ολοκλήρωση παραγγελίας · giapraki</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../assets/style-b.css">
+<style>
+  .page-head { padding: 56px 0 24px; border-bottom: 1px solid var(--border); }
+  .page-head h1 { font-size: clamp(32px,4vw,48px); letter-spacing: -1.6px; }
+
+  .checkout-grid {
+    display: grid; grid-template-columns: 1.5fr 1fr; gap: 56px;
+    padding: 48px 0 96px;
+    align-items: start;
+  }
+
+  /* Vertical numbered steps */
+  .step {
+    padding: 32px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .step:first-child { padding-top: 0; }
+  .step:last-child { border-bottom: 0; }
+  .step-num {
+    font-size: 12px; font-weight: 700; color: var(--coral);
+    letter-spacing: 1.2px; text-transform: uppercase;
+    display: block; margin-bottom: 4px;
+  }
+  .step h2 {
+    font-size: 24px; font-weight: 800; letter-spacing: -0.8px;
+    margin-bottom: 18px;
+  }
+
+  /* Address card */
+  .addr-card {
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 18px 20px; display: flex; justify-content: space-between;
+    align-items: start; gap: 20px;
+  }
+  .addr-card .who { font-weight: 700; margin-bottom: 4px; font-size: 15px; }
+  .addr-card .where { color: var(--ink-muted); font-size: 14px; }
+  .change-link {
+    color: var(--coral); font-weight: 600; font-size: 13px;
+    text-decoration: none;
+  }
+  .change-link:hover { color: var(--coral-deep); text-decoration: underline; }
+
+  /* Payment radios */
+  .pay-list { display: flex; flex-direction: column; gap: 8px; }
+  .pay-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 18px; border: 1px solid var(--border);
+    border-radius: var(--radius-lg); cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .pay-row:hover { border-color: var(--ink); }
+  .pay-row input[type=radio] {
+    appearance: none; width: 18px; height: 18px;
+    border: 1.5px solid var(--border); border-radius: 50%;
+    margin: 0; cursor: pointer; position: relative; flex-shrink: 0;
+  }
+  .pay-row input[type=radio]:checked {
+    border-color: var(--coral); border-width: 5px;
+  }
+  .pay-row.checked { border-color: var(--ink); background: var(--bg-soft); }
+  .pay-icon {
+    width: 32px; height: 32px; display: inline-flex;
+    align-items: center; justify-content: center;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--bg); font-size: 16px;
+  }
+  .pay-label { flex: 1; font-weight: 600; font-size: 15px; }
+  .pay-meta { color: var(--ink-muted); font-size: 13px; }
+
+  /* Notes */
+  .notes-textarea {
+    width: 100%; min-height: 80px; resize: vertical;
+    padding: 12px 14px; border: 1px solid var(--border);
+    border-radius: var(--radius); font: inherit;
+    background: var(--bg); outline: 0;
+  }
+  .notes-textarea:focus { border-color: var(--ink); }
+
+  /* Tip buttons */
+  .tip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tip-btn {
+    flex: 1; min-width: 64px;
+    padding: 12px 10px; border: 1px solid var(--border);
+    background: var(--bg); border-radius: var(--radius);
+    font-weight: 700; cursor: pointer; font-family: inherit;
+    color: var(--ink); transition: all .15s;
+    font-feature-settings: 'tnum';
+  }
+  .tip-btn:hover { border-color: var(--ink); }
+  .tip-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
+
+  /* Right rail (sticky) */
+  .summary-card {
+    position: sticky; top: 96px;
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 24px 24px 28px; background: var(--bg);
+  }
+  .summary-card h3 {
+    font-size: 18px; font-weight: 800; letter-spacing: -0.4px;
+    margin-bottom: 16px;
+  }
+  .sum-line {
+    display: flex; justify-content: space-between;
+    padding: 8px 0; font-size: 14px; gap: 12px;
+    font-feature-settings: 'tnum';
+  }
+  .sum-line .name { flex: 1; }
+  .sum-line .qty { color: var(--ink-muted); }
+  .sum-line .price { font-weight: 600; }
+  .sum-empty {
+    text-align: center; padding: 24px 0;
+    color: var(--ink-muted); font-size: 14px;
+  }
+  .sum-divider { height: 1px; background: var(--border); margin: 16px 0; }
+  .sum-row {
+    display: flex; justify-content: space-between; padding: 5px 0;
+    font-size: 14px; font-feature-settings: 'tnum';
+  }
+  .sum-row.total {
+    border-top: 1px solid var(--border); padding-top: 14px; margin-top: 6px;
+    font-size: 18px; font-weight: 800;
+  }
+  .sum-row .label { color: var(--ink-muted); }
+  .sum-row.total .label { color: var(--ink); }
+
+  @media (max-width: 980px) {
+    .checkout-grid { grid-template-columns: 1fr; gap: 32px; }
+    .summary-card { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="home.html" class="brand" aria-label="giapraki αρχική">
+      <object class="mark" data="../assets/favicon.svg" type="image/svg+xml" aria-hidden="true"></object>
+      <span class="word">giapraki</span>
+    </a>
+    <ul>
+      <li><a href="home.html">Γειτονιά</a></li>
+      <li><a href="stores.html">Εστιατόρια</a></li>
+      <li><a href="home.html#how">Πώς λειτουργεί</a></li>
+      <li><a href="#">Σύνδεση</a></li>
+    </ul>
+    <div class="actions">
+      <a href="store.html" class="btn btn-ghost">← Πίσω</a>
+    </div>
+  </div>
+</header>
+
+<section class="page-head">
+  <div class="wrap">
+    <span class="eyebrow">Ολοκλήρωση παραγγελίας</span>
+    <h1 style="margin-top:10px;">Λίγα ακόμη βήματα.</h1>
+  </div>
+</section>
+
+<main class="wrap">
+  <form class="checkout-grid" id="checkout-form" onsubmit="submitOrder(event)">
+
+    <div>
+      <!-- Step 1 — Address -->
+      <section class="step">
+        <span class="step-num">1 — Διεύθυνση</span>
+        <h2>Πού να σου τα φέρουμε;</h2>
+        <div class="addr-card">
+          <div>
+            <div class="who">Πάνος Κουτσαρδάκης</div>
+            <div class="where">Νικηφόρου 12, 50100 Κοζάνη · 2ος όροφος, κουδούνι «Κ»</div>
+          </div>
+          <a href="#" class="change-link">Αλλαγή</a>
+        </div>
+      </section>
+
+      <!-- Step 2 — Payment -->
+      <section class="step">
+        <span class="step-num">2 — Πληρωμή</span>
+        <h2>Πώς θα πληρώσεις;</h2>
+        <div class="pay-list">
+          <label class="pay-row checked">
+            <input type="radio" name="pay" value="card" checked>
+            <span class="pay-icon" aria-hidden="true">▣</span>
+            <span class="pay-label">Κάρτα</span>
+            <span class="pay-meta">Visa •••• 4242</span>
+          </label>
+          <label class="pay-row">
+            <input type="radio" name="pay" value="cash">
+            <span class="pay-icon" aria-hidden="true">€</span>
+            <span class="pay-label">Μετρητά στον οδηγό</span>
+            <span class="pay-meta">Χρειάζεσαι ακριβώς το ποσό</span>
+          </label>
+          <label class="pay-row">
+            <input type="radio" name="pay" value="pos">
+            <span class="pay-icon" aria-hidden="true">▤</span>
+            <span class="pay-label">POS κάρτα στην παράδοση</span>
+            <span class="pay-meta">Φέρνουμε POS</span>
+          </label>
+          <label class="pay-row">
+            <input type="radio" name="pay" value="apple">
+            <span class="pay-icon" aria-hidden="true">⌖</span>
+            <span class="pay-label">Apple Pay / Google Pay</span>
+            <span class="pay-meta">Άμεση πληρωμή</span>
+          </label>
+        </div>
+
+        <div style="margin-top: 24px;">
+          <h3 style="font-size:14px; text-transform:uppercase; letter-spacing:1.2px; color:var(--ink-muted); font-weight:600; margin-bottom:10px;">Οδηγίες παράδοσης</h3>
+          <textarea class="notes-textarea" placeholder="π.χ. χτύπα κουδούνι «Κ», άφησε στην πόρτα, μην χτυπήσεις…"></textarea>
+        </div>
+
+        <div style="margin-top: 24px;">
+          <h3 style="font-size:14px; text-transform:uppercase; letter-spacing:1.2px; color:var(--ink-muted); font-weight:600; margin-bottom:10px;">Φιλοδώρημα οδηγού</h3>
+          <div class="tip-row" id="tip-row">
+            <button type="button" class="tip-btn active" data-tip="0">€0</button>
+            <button type="button" class="tip-btn" data-tip="1">€1</button>
+            <button type="button" class="tip-btn" data-tip="2">€2</button>
+            <button type="button" class="tip-btn" data-tip="3">€3</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 3 — Confirm -->
+      <section class="step">
+        <span class="step-num">3 — Επιβεβαίωση</span>
+        <h2>Έλεγξε και επιβεβαίωσε.</h2>
+        <p class="muted" style="font-size:14px; max-width:520px;">
+          Πατώντας «Παραγγελία», ο οδηγός μας αρχίζει αναζήτηση. Μπορείς να ακυρώσεις τα πρώτα 2 λεπτά
+          χωρίς χρέωση.
+        </p>
+      </section>
+    </div>
+
+    <!-- Sticky summary -->
+    <aside>
+      <div class="summary-card">
+        <h3>Η παραγγελία σου</h3>
+        <div id="sum-items"></div>
+        <div class="sum-divider" id="sum-divider"></div>
+        <div class="sum-row mono"><span class="label">Υποσύνολο</span><span id="sum-subtotal">€0,00</span></div>
+        <div class="sum-row mono"><span class="label">Παράδοση</span><span>€2,00</span></div>
+        <div class="sum-row mono"><span class="label">Φιλοδώρημα</span><span id="sum-tip">€0,00</span></div>
+        <div class="sum-row total mono"><span class="label">Σύνολο</span><span id="sum-total">€0,00</span></div>
+        <button type="submit" class="btn btn-coral btn-block btn-lg" style="margin-top:18px;">
+          Παραγγελία <span id="sum-cta-total" class="mono">€0,00</span> <span aria-hidden="true">→</span>
+        </button>
+        <p class="muted" style="font-size:12px; text-align:center; margin-top:12px;">
+          Ασφαλής πληρωμή · 25–35′ ETA
+        </p>
+      </div>
+    </aside>
+  </form>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-bottom">
+      <span>© 2026 giapraki</span>
+      <span>Σχέδιο πρότασης — preview</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const KEY = 'giapraki_cart';
+  const DELIVERY_FEE = 2.00;
+  let tip = 0;
+
+  function readCart() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+    catch { return []; }
+  }
+  function fmt(n) { return '€' + n.toFixed(2).replace('.', ','); }
+  function escapeHtml(s) { return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+  function render() {
+    const c = readCart();
+    const items = document.getElementById('sum-items');
+    const divider = document.getElementById('sum-divider');
+
+    if (c.length === 0) {
+      items.innerHTML = '<div class="sum-empty">Το καλάθι είναι άδειο.<br><a href="store.html" style="color:var(--coral); text-decoration:underline;">Πάμε στο μενού →</a></div>';
+      divider.style.display = 'none';
+    } else {
+      divider.style.display = 'block';
+      items.innerHTML = c.map(it => `
+        <div class="sum-line">
+          <span class="qty mono">${it.qty}×</span>
+          <span class="name">${escapeHtml(it.name)}</span>
+          <span class="price mono">${fmt(it.qty * it.price)}</span>
+        </div>
+      `).join('');
+    }
+
+    const subtotal = c.reduce((s, it) => s + it.qty * it.price, 0);
+    const total = c.length > 0 ? subtotal + DELIVERY_FEE + tip : 0;
+
+    document.getElementById('sum-subtotal').textContent = fmt(subtotal);
+    document.getElementById('sum-tip').textContent = fmt(tip);
+    document.getElementById('sum-total').textContent = fmt(total);
+    document.getElementById('sum-cta-total').textContent = fmt(total);
+  }
+
+  // Tip buttons
+  document.querySelectorAll('.tip-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      tip = parseFloat(btn.dataset.tip);
+      render();
+    });
+  });
+
+  // Payment row visual select
+  document.querySelectorAll('.pay-row input[type=radio]').forEach(r => {
+    r.addEventListener('change', () => {
+      document.querySelectorAll('.pay-row').forEach(row => row.classList.remove('checked'));
+      if (r.checked) r.closest('.pay-row').classList.add('checked');
+    });
+  });
+
+  function submitOrder(e) {
+    e.preventDefault();
+    const c = readCart();
+    if (c.length === 0) { alert('Το καλάθι είναι άδειο.'); return; }
+    // clear cart
+    localStorage.removeItem(KEY);
+    // fake order id
+    const id = 'GP' + Math.floor(100000 + Math.random() * 900000);
+    window.location = 'track.html?id=' + id;
+  }
+
+  render();
+</script>
+
+</body>
+</html>

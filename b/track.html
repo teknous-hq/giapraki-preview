@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Παρακολούθηση παραγγελίας · giapraki</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../assets/style-b.css">
+<style>
+  .page-head { padding: 48px 0 24px; border-bottom: 1px solid var(--border); }
+  .page-head h1 { font-size: clamp(28px,3.6vw,40px); letter-spacing: -1.2px; }
+  .order-id { font-size: 13px; color: var(--ink-muted); margin-top: 8px; }
+  .order-id .id { color: var(--ink); font-weight: 600; font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  .track-grid {
+    display: grid; grid-template-columns: 1.5fr 1fr; gap: 56px;
+    padding: 48px 0 96px; align-items: start;
+  }
+
+  /* ── Editorial 4-step timeline (horizontal) ───────────── */
+  .timeline {
+    margin: 24px 0 40px;
+    position: relative;
+  }
+  .timeline-track {
+    position: relative;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .timeline-track::before {
+    content: ""; position: absolute; left: 12px; right: 12px; top: 11px;
+    height: 1px; background: var(--border);
+  }
+  .timeline-track::after {
+    content: ""; position: absolute; left: 12px; top: 11px;
+    height: 1px; background: var(--coral);
+    width: var(--progress, 0%);
+    transition: width .5s ease;
+  }
+  .ts-step {
+    position: relative;
+    padding-top: 32px;
+    text-align: left;
+  }
+  .ts-step .dot {
+    position: absolute; top: 4px; left: 0;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--border);
+    transition: all .3s ease;
+  }
+  .ts-step.done .dot { background: var(--coral); border-color: var(--coral); }
+  .ts-step.active .dot {
+    background: var(--coral); border-color: var(--coral);
+    box-shadow: 0 0 0 6px rgba(255,107,61,0.18);
+  }
+  .ts-label {
+    font-size: 13px; font-weight: 600; color: var(--ink-muted);
+    transition: color .3s;
+  }
+  .ts-step.done .ts-label, .ts-step.active .ts-label { color: var(--ink); }
+  .ts-step.active .ts-label { font-weight: 800; color: var(--coral); }
+  .ts-time {
+    font-size: 12px; color: var(--ink-muted); margin-top: 2px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  /* ── ETA card ─────────────────────────────────────────── */
+  .eta-card {
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 36px 32px; margin-bottom: 32px;
+  }
+  .eta-card .label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.4px;
+    color: var(--ink-muted); font-weight: 600; margin-bottom: 8px;
+  }
+  .eta-card .big {
+    font-size: clamp(36px,5vw,52px); font-weight: 800; letter-spacing: -1.8px;
+    line-height: 1.05; color: var(--ink);
+  }
+  .eta-card .big em { color: var(--coral); font-style: normal; }
+
+  /* Map placeholder */
+  .map {
+    aspect-ratio: 16/9;
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    background: var(--bg-soft); position: relative; overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .map svg { width: 100%; height: 100%; display: block; }
+
+  /* Driver row */
+  .driver {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 20px;
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    margin-bottom: 16px;
+  }
+  .driver .avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--bg-soft) center/cover;
+    background-image: url('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&fit=crop');
+    flex-shrink: 0; border: 1px solid var(--border);
+  }
+  .driver-info { flex: 1; }
+  .driver-name { font-weight: 700; font-size: 15px; }
+  .driver-meta { font-size: 13px; color: var(--ink-muted); margin-top: 2px; }
+  .driver-call {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid var(--border); background: var(--bg);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all .15s;
+  }
+  .driver-call:hover { border-color: var(--coral); color: var(--coral); }
+
+  /* Right column — order summary mono */
+  .order-summary {
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 24px 24px 28px;
+    position: sticky; top: 96px;
+  }
+  .order-summary h3 {
+    font-size: 16px; font-weight: 800; letter-spacing: -0.4px;
+    margin-bottom: 16px;
+  }
+  .os-store {
+    display: flex; align-items: center; gap: 12px;
+    padding-bottom: 16px; margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .os-store .img {
+    width: 44px; height: 44px; border-radius: 8px;
+    background-size: cover; background-position: center;
+    background-image: url('https://images.unsplash.com/photo-1571066811602-716837d681de?w=200&fit=crop');
+  }
+  .os-store .name { font-weight: 700; font-size: 14px; }
+  .os-store .meta { font-size: 12px; color: var(--ink-muted); }
+  .os-line {
+    display: flex; gap: 10px; padding: 6px 0;
+    font-size: 13px; font-feature-settings: 'tnum';
+  }
+  .os-line .qty { color: var(--ink-muted); width: 24px; }
+  .os-line .name { flex: 1; }
+  .os-line .price { font-weight: 600; }
+  .os-divider { height: 1px; background: var(--border); margin: 12px 0; }
+  .os-row {
+    display: flex; justify-content: space-between; padding: 4px 0;
+    font-size: 13px; font-feature-settings: 'tnum';
+  }
+  .os-row.total {
+    border-top: 1px solid var(--border); padding-top: 12px; margin-top: 8px;
+    font-size: 16px; font-weight: 800;
+  }
+  .os-row .label { color: var(--ink-muted); }
+  .os-row.total .label { color: var(--ink); }
+
+  @media (max-width: 980px) {
+    .track-grid { grid-template-columns: 1fr; gap: 32px; }
+    .order-summary { position: static; }
+  }
+  @media (max-width: 600px) {
+    .timeline-track { gap: 4px; }
+    .ts-label { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="home.html" class="brand" aria-label="giapraki αρχική">
+      <object class="mark" data="../assets/favicon.svg" type="image/svg+xml" aria-hidden="true"></object>
+      <span class="word">giapraki</span>
+    </a>
+    <ul>
+      <li><a href="home.html">Γειτονιά</a></li>
+      <li><a href="stores.html">Εστιατόρια</a></li>
+      <li><a href="home.html#how">Πώς λειτουργεί</a></li>
+      <li><a href="#">Σύνδεση</a></li>
+    </ul>
+    <div class="actions">
+      <a href="stores.html" class="btn btn-ghost">Νέα παραγγελία</a>
+    </div>
+  </div>
+</header>
+
+<section class="page-head">
+  <div class="wrap">
+    <span class="eyebrow">Παρακολούθηση</span>
+    <h1 style="margin-top:10px;">Η παραγγελία σου είναι σε εξέλιξη.</h1>
+    <p class="order-id">Κωδικός παραγγελίας <span class="id" id="order-id">—</span> · Pizza Roma</p>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="track-grid">
+
+    <div>
+      <!-- Timeline -->
+      <div class="timeline">
+        <div class="timeline-track" id="timeline" style="--progress: 0%;">
+          <div class="ts-step done" data-i="0">
+            <span class="dot"></span>
+            <div class="ts-label">Λάβαμε</div>
+            <div class="ts-time">19:42</div>
+          </div>
+          <div class="ts-step active" data-i="1">
+            <span class="dot"></span>
+            <div class="ts-label">Ετοιμάζουμε</div>
+            <div class="ts-time">19:45</div>
+          </div>
+          <div class="ts-step" data-i="2">
+            <span class="dot"></span>
+            <div class="ts-label">Στον δρόμο</div>
+            <div class="ts-time">—</div>
+          </div>
+          <div class="ts-step" data-i="3">
+            <span class="dot"></span>
+            <div class="ts-label">Παραδόθηκε</div>
+            <div class="ts-time">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ETA -->
+      <div class="eta-card">
+        <div class="label">Εκτιμώμενη παράδοση</div>
+        <div class="big" id="eta-text">Σε <em>20–25</em> λεπτά.</div>
+      </div>
+
+      <!-- Map placeholder -->
+      <div class="map" role="img" aria-label="Χάρτης διαδρομής παράδοσης">
+        <svg viewBox="0 0 800 400" preserveAspectRatio="none">
+          <!-- street grid hairlines -->
+          <g stroke="#E5E5E2" stroke-width="1" fill="none">
+            <line x1="0" y1="80"  x2="800" y2="80"/>
+            <line x1="0" y1="160" x2="800" y2="160"/>
+            <line x1="0" y1="240" x2="800" y2="240"/>
+            <line x1="0" y1="320" x2="800" y2="320"/>
+            <line x1="120" y1="0" x2="120" y2="400"/>
+            <line x1="280" y1="0" x2="280" y2="400"/>
+            <line x1="440" y1="0" x2="440" y2="400"/>
+            <line x1="600" y1="0" x2="600" y2="400"/>
+            <line x1="720" y1="0" x2="720" y2="400"/>
+          </g>
+          <!-- route (sage) -->
+          <path d="M 120 320 Q 200 320 280 280 T 440 200 T 600 140 L 680 100"
+                stroke="#3F8F5C" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="6 4"/>
+          <!-- restaurant marker -->
+          <g transform="translate(120, 320)">
+            <circle r="6" fill="#0F1115"/>
+            <text x="14" y="4" font-family="Inter,system-ui" font-size="11" fill="#0F1115" font-weight="600">Pizza Roma</text>
+          </g>
+          <!-- driver position (current) -->
+          <g transform="translate(440, 200)">
+            <circle r="10" fill="rgba(255,107,61,0.18)"/>
+            <circle r="5" fill="#FF6B3D"/>
+          </g>
+          <!-- destination pin (coral) -->
+          <g transform="translate(680, 100)">
+            <path d="M 0 -16 C 8 -16 12 -10 12 -4 C 12 4 0 16 0 16 C 0 16 -12 4 -12 -4 C -12 -10 -8 -16 0 -16 Z" fill="#FF6B3D"/>
+            <circle cx="0" cy="-4" r="4" fill="white"/>
+            <text x="14" y="4" font-family="Inter,system-ui" font-size="11" fill="#0F1115" font-weight="600">Νικηφόρου 12</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Driver -->
+      <div class="driver">
+        <div class="avatar" role="img" aria-label="Avatar οδηγού"></div>
+        <div class="driver-info">
+          <div class="driver-name">Γιώργος Π.</div>
+          <div class="driver-meta">★ 4.9 · 380 παραδόσεις · Δίκυκλο</div>
+        </div>
+        <button class="driver-call" type="button" aria-label="Κάλεσε οδηγό" title="Κάλεσε">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </button>
+      </div>
+
+      <p class="muted" style="font-size:13px; margin-top:24px; max-width:480px;">
+        Ενημερώσεις σε πραγματικό χρόνο. Ο οδηγός θα έρθει στην πόρτα — δεν χρειάζεται να βγεις.
+      </p>
+    </div>
+
+    <!-- Right summary -->
+    <aside>
+      <div class="order-summary">
+        <h3>Η παραγγελία σου</h3>
+        <div class="os-store">
+          <div class="img"></div>
+          <div>
+            <div class="name">Pizza Roma</div>
+            <div class="meta">Ναπολιτάνικη πίτσα</div>
+          </div>
+        </div>
+        <div class="os-line"><span class="qty mono">1×</span><span class="name">Margherita</span><span class="price mono">€9,50</span></div>
+        <div class="os-line"><span class="qty mono">1×</span><span class="name">Caesar</span><span class="price mono">€8,50</span></div>
+        <div class="os-line"><span class="qty mono">2×</span><span class="name">Σπιτική λεμονάδα</span><span class="price mono">€6,40</span></div>
+
+        <div class="os-divider"></div>
+        <div class="os-row mono"><span class="label">Υποσύνολο</span><span>€24,40</span></div>
+        <div class="os-row mono"><span class="label">Παράδοση</span><span>€2,00</span></div>
+        <div class="os-row mono"><span class="label">Φιλοδώρημα</span><span>€1,00</span></div>
+        <div class="os-row total mono"><span class="label">Σύνολο</span><span>€27,40</span></div>
+
+        <p class="muted" style="font-size:12px; text-align:center; margin-top:14px;">
+          Πληρωμή με Visa •••• 4242
+        </p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-bottom">
+      <span>© 2026 giapraki</span>
+      <span>Σχέδιο πρότασης — preview</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Order id from query string (or fallback)
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id') || 'GP123456';
+  document.getElementById('order-id').textContent = id;
+
+  // Auto-advance steps every 8s
+  const steps = [
+    { i: 0, label: 'Παραλάβαμε την παραγγελία σου.', eta: 'Σε <em>25–30</em> λεπτά.', progress: 0 },
+    { i: 1, label: 'Το εστιατόριο ετοιμάζει το γεύμα σου.', eta: 'Σε <em>20–25</em> λεπτά.', progress: 33 },
+    { i: 2, label: 'Ο οδηγός είναι καθ’ οδόν.', eta: 'Σε <em>8–12</em> λεπτά.', progress: 66 },
+    { i: 3, label: 'Παραδόθηκε. Καλή όρεξη!', eta: '<em>Παραδόθηκε.</em>', progress: 100 },
+  ];
+
+  let cur = 1; // start at "Ετοιμάζουμε"
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  function nowHHMM() { const d = new Date(); return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+
+  function applyStep(i) {
+    document.querySelectorAll('.ts-step').forEach((el, idx) => {
+      el.classList.toggle('done', idx < i);
+      el.classList.toggle('active', idx === i);
+      if (idx === i) {
+        const tEl = el.querySelector('.ts-time');
+        if (tEl && tEl.textContent === '—') tEl.textContent = nowHHMM();
+      }
+    });
+    document.getElementById('timeline').style.setProperty('--progress', steps[i].progress + '%');
+    document.getElementById('eta-text').innerHTML = steps[i].eta;
+  }
+  applyStep(cur);
+
+  setInterval(() => {
+    if (cur < steps.length - 1) {
+      cur++;
+      applyStep(cur);
+    }
+  }, 8000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Εστιατόρια · giapraki</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../assets/style-b.css">
+<style>
+  /* Sticky filter row */
+  .filter-bar {
+    position: sticky; top: 73px; z-index: 50;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 0;
+  }
+  .filter-row {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .filter-row .search-bar { max-width: 360px; flex: 1; min-width: 240px; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* Stores grid */
+  .stores-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; padding: 40px 0;
+  }
+  .store-card {
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    overflow: hidden; color: var(--ink); display: block;
+    transition: border-color .15s, transform .15s;
+  }
+  .store-card:hover { border-color: var(--ink); transform: translateY(-1px); }
+  .store-card .img {
+    aspect-ratio: 16/10; background: var(--bg-soft);
+    background-size: cover; background-position: center;
+  }
+  .store-card .body { padding: 18px 20px 20px; }
+  .store-card h3 { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; margin-bottom: 4px; }
+  .store-card .cuisine { color: var(--ink-muted); font-size: 13px; }
+  .store-card .stats {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--ink-muted);
+    margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
+    font-feature-settings: 'tnum';
+  }
+  .store-card .stats span.sep { color: var(--border); }
+  .store-card .stats .star { color: var(--ink); font-weight: 600; }
+
+  /* Pagination */
+  .pagination {
+    display: flex; justify-content: center; align-items: center; gap: 8px;
+    padding: 24px 0 16px;
+    color: var(--ink-muted); font-size: 14px;
+  }
+  .page-btn {
+    width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 8px; border: 1px solid var(--border); background: var(--bg);
+    color: var(--ink); font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+  .page-btn:hover { border-color: var(--ink); }
+  .page-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
+  .page-info { color: var(--ink-muted); font-size: 13px; margin: 0 14px; }
+
+  .page-head { padding: 56px 0 8px; }
+  .page-head h1 { font-size: clamp(32px,4.5vw,52px); letter-spacing:-1.8px; }
+
+  @media (max-width: 1000px) {
+    .stores-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .stores-grid { grid-template-columns: 1fr; }
+    .filter-bar { top: 65px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="home.html" class="brand" aria-label="giapraki αρχική">
+      <object class="mark" data="../assets/favicon.svg" type="image/svg+xml" aria-hidden="true"></object>
+      <span class="word">giapraki</span>
+    </a>
+    <ul>
+      <li><a href="home.html">Γειτονιά</a></li>
+      <li><a href="stores.html" style="color:var(--ink);">Εστιατόρια</a></li>
+      <li><a href="home.html#how">Πώς λειτουργεί</a></li>
+      <li><a href="#">Σύνδεση</a></li>
+    </ul>
+    <div class="actions">
+      <a href="store.html" class="btn btn-coral">Παράγγειλε <span aria-hidden="true">▸</span></a>
+    </div>
+  </div>
+</header>
+
+<section class="page-head">
+  <div class="wrap">
+    <span class="eyebrow">Παράδοση στην Κοζάνη</span>
+    <h1 style="margin-top:10px;">Εστιατόρια κοντά σου</h1>
+    <p class="muted" style="margin-top:14px; max-width:540px;">
+      42 τοπικά εστιατόρια. Φιλτράρισε ανά κουζίνα ή ψάξε με όνομα.
+    </p>
+  </div>
+</section>
+
+<div class="filter-bar">
+  <div class="wrap filter-row">
+    <form class="search-bar" onsubmit="event.preventDefault();" role="search">
+      <input type="search" placeholder="Αναζήτηση εστιατορίου ή πιάτου" aria-label="Αναζήτηση">
+    </form>
+    <div class="chips" role="tablist" aria-label="Φίλτρα κουζίνας">
+      <button class="chip active" type="button">Όλα</button>
+      <button class="chip" type="button">Πίτσα</button>
+      <button class="chip" type="button">Burger</button>
+      <button class="chip" type="button">Ελληνικά</button>
+      <button class="chip" type="button">Asian</button>
+      <button class="chip" type="button">Καφές</button>
+      <button class="chip" type="button">Σαλάτα</button>
+      <button class="chip" type="button">Επιδόρπια</button>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="stores-grid">
+
+      <a href="store.html" class="store-card">
+        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1571066811602-716837d681de?w=700&fit=crop');"></div>
+        <div class="body">
+          <h3>Pizza Roma</h3>
+          <div class="cuisine">Ιταλικά · Πίτσα · Pasta</div>
+          <div class="stats mono"><span class="star">★ 4.8</span><span class="sep">·</span><span>25–35′</span><span class="sep">·</span><span>min €8</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="store-card">
+        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=700&fit=crop');"></div>
+        <div class="body">
+          <h3>Burger Garage</h3>
+          <div class="cuisine">Burgers · American</div>
+          <div class="stats mono"><span class="star">★ 4.7</span><span class="sep">·</span><span>20–30′</span><span class="sep">·</span><span>min €10</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="store-card">
+        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=700&fit=crop');"></div>
+        <div class="body">
+          <h3>Σουβλάκι Τσουκνίδας</h3>
+          <div class="cuisine">Ελληνικά · Σουβλάκι · Γύρος</div>
+          <div class="stats mono"><span class="star">★ 4.9</span><span class="sep">·</span><span>15–25′</span><span class="sep">·</span><span>min €6</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="store-card">
+        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?w=700&fit=crop');"></div>
+        <div class="body">
+          <h3>Tokyo Bento</h3>
+          <div class="cuisine">Asian · Sushi · Ramen</div>
+          <div class="stats mono"><span class="star">★ 4.6</span><span class="sep">·</span><span>30–40′</span><span class="sep">·</span><span>min €12</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="store-card">
+        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=700&fit=crop');"></div>
+        <div class="body">
+          <h3>Chicken House</h3>
+          <div class="cuisine">Κοτόπουλο · Τηγανητά</div>
+          <div class="stats mono"><span class="star">★ 4.5</span><span class="sep">·</span><span>20–30′</span><span class="sep">·</span><span>min €8</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="store-card">
+        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=700&fit=crop');"></div>
+        <div class="body">
+          <h3>Πράσινο Πιάτο</h3>
+          <div class="cuisine">Σαλάτες · Healthy · Vegan</div>
+          <div class="stats mono"><span class="star">★ 4.7</span><span class="sep">·</span><span>18–28′</span><span class="sep">·</span><span>min €9</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="store-card">
+        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&fit=crop');"></div>
+        <div class="body">
+          <h3>Coffee Lab</h3>
+          <div class="cuisine">Καφές · Brunch · Pastries</div>
+          <div class="stats mono"><span class="star">★ 4.8</span><span class="sep">·</span><span>12–20′</span><span class="sep">·</span><span>min €5</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="store-card">
+        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=700&fit=crop');"></div>
+        <div class="body">
+          <h3>Sweet & Sour</h3>
+          <div class="cuisine">Επιδόρπια · Donuts · Cookies</div>
+          <div class="stats mono"><span class="star">★ 4.6</span><span class="sep">·</span><span>15–25′</span><span class="sep">·</span><span>min €7</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="store-card">
+        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=700&fit=crop');"></div>
+        <div class="body">
+          <h3>Trattoria Bella</h3>
+          <div class="cuisine">Ιταλικά · Pasta · Risotto</div>
+          <div class="stats mono"><span class="star">★ 4.7</span><span class="sep">·</span><span>30–45′</span><span class="sep">·</span><span>min €12</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="store-card">
+        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=700&fit=crop');"></div>
+        <div class="body">
+          <h3>Ταβέρνα Στράτος</h3>
+          <div class="cuisine">Παραδοσιακά · Μαγειρευτά</div>
+          <div class="stats mono"><span class="star">★ 4.9</span><span class="sep">·</span><span>35–45′</span><span class="sep">·</span><span>min €10</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="store-card">
+        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1559847844-5315695dadae?w=700&fit=crop');"></div>
+        <div class="body">
+          <h3>Wok & Roll</h3>
+          <div class="cuisine">Asian · Noodles · Stir-fry</div>
+          <div class="stats mono"><span class="star">★ 4.5</span><span class="sep">·</span><span>25–35′</span><span class="sep">·</span><span>min €10</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="store-card">
+        <div class="img" style="background-image:url('https://images.unsplash.com/photo-1587314168485-3236d6710814?w=700&fit=crop');"></div>
+        <div class="body">
+          <h3>Bakehouse</h3>
+          <div class="cuisine">Αρτοποιείο · Sandwich · Καφές</div>
+          <div class="stats mono"><span class="star">★ 4.6</span><span class="sep">·</span><span>15–25′</span><span class="sep">·</span><span>min €5</span></div>
+        </div>
+      </a>
+
+    </div>
+
+    <nav class="pagination" aria-label="Σελιδοποίηση">
+      <button class="page-btn" aria-label="Προηγούμενη σελίδα">‹</button>
+      <button class="page-btn active" aria-current="page">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">4</button>
+      <button class="page-btn" aria-label="Επόμενη σελίδα">›</button>
+      <span class="page-info">Σελίδα 1 από 4</span>
+    </nav>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="home.html" class="brand">
+          <object class="mark" data="../assets/favicon.svg" type="image/svg+xml" aria-hidden="true"></object>
+          <span class="word">giapraki</span>
+        </a>
+        <p class="muted" style="font-size:13px; max-width:280px; margin-top:12px;">
+          Καλό φαγητό από τη γειτονιά σου. Φτιαγμένο στην Κοζάνη.
+        </p>
+      </div>
+      <div><h5>Πλατφόρμα</h5><ul>
+        <li><a href="stores.html">Εστιατόρια</a></li>
+        <li><a href="#">Προσφορές</a></li>
+        <li><a href="#">Εφαρμογή</a></li>
+      </ul></div>
+      <div><h5>Εταιρεία</h5><ul>
+        <li><a href="#">Σχετικά</a></li>
+        <li><a href="#">Επικοινωνία</a></li>
+        <li><a href="#">Συνεργαστείτε</a></li>
+      </ul></div>
+      <div><h5>Πόλεις</h5><ul>
+        <li><a href="#">Κοζάνη</a></li>
+        <li><a href="#">Πτολεμαΐδα</a></li>
+        <li><a href="#">Σιάτιστα</a></li>
+      </ul></div>
+      <div><h5>Νομικά</h5><ul>
+        <li><a href="#">Όροι χρήσης</a></li>
+        <li><a href="#">Απόρρητο</a></li>
+        <li><a href="#">Cookies</a></li>
+      </ul></div>
+    </div>
+    <div class="foot-disclaimer">
+      Σχέδιο πρότασης — preview για εσωτερική επισκόπηση. Όχι ζωντανή υπηρεσία.
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 giapraki</span>
+      <span>Made with care in Κοζάνη</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Chip toggle (preview only)
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>

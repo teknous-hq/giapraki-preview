@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<title>giapraki · Ολοκλήρωση παραγγελίας</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../assets/cart.css">
+<style>
+  :root {
+    --coral: #FF8F5C; --coral-deep: #E85D2C; --coral-soft: #FFD5C2;
+    --sage: #7BB661; --olive: #5C7A3D;
+    --saffron: #F4B942; --saffron-deep: #D89A1F;
+    --ink: #1F1A17; --ink-muted: #6B6660; --pebble: #D4CFC8;
+    --cloud: #FAF6F0; --cream: #FFF8F0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--cream); color: var(--ink); line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .demo {
+    background: var(--ink); color: var(--cream); font-size: 12px;
+    padding: 8px 24px;
+    display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  }
+  .demo .label { color: var(--saffron); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .demo .links { display: flex; gap: 14px; }
+  .demo a { color: var(--pebble); text-decoration: none; }
+  .demo a.active { color: var(--coral); font-weight: 700; }
+
+  header.site { background: var(--cream); border-bottom: 1px solid var(--pebble); }
+  .nav { display: flex; align-items: center; gap: 16px; padding: 14px 0; }
+  .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); flex-shrink: 0; }
+  .logo-mark { width: 38px; height: 38px; }
+  .logo .word { font-size: 20px; font-weight: 900; letter-spacing: -1px; }
+  .crumbs { flex: 1; color: var(--ink-muted); font-size: 13px; }
+  .crumbs a { color: var(--ink-muted); text-decoration: none; }
+
+  .page-head { padding: 28px 0 12px; }
+  .page-head h1 { font-size: clamp(26px, 4vw, 34px); font-weight: 900; letter-spacing: -1px; }
+  .page-head .meta { color: var(--ink-muted); font-size: 14px; margin-top: 4px; }
+
+  .layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; padding-bottom: 64px; }
+  .sections { display: flex; flex-direction: column; gap: 18px; }
+
+  .sec { background: white; border-radius: 24px; padding: 22px; }
+  .sec h2 {
+    font-size: 17px; font-weight: 900; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .sec h2 .num {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--coral-deep); color: var(--cream);
+    font-size: 13px; display: inline-flex; align-items: center; justify-content: center;
+  }
+  .sec h2 .opt { font-size: 12px; font-weight: 600; color: var(--ink-muted); margin-left: auto; }
+
+  /* Address */
+  .addr-card {
+    padding: 14px 16px; border-radius: 14px;
+    border: 2px solid var(--coral); background: var(--coral-soft);
+    display: flex; justify-content: space-between; align-items: start; gap: 12px;
+  }
+  .addr-card .label { font-weight: 800; font-size: 14px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .addr-card .text { font-size: 13px; color: var(--ink); line-height: 1.5; }
+  .change-btn {
+    background: var(--ink); color: var(--cream); border: none;
+    padding: 8px 14px; border-radius: 999px;
+    font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+    flex-shrink: 0;
+  }
+  .change-btn:hover { background: var(--coral-deep); }
+
+  /* Payment radios */
+  .pay-list {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .pay {
+    padding: 16px; border-radius: 14px;
+    border: 2px solid var(--cloud); background: white;
+    cursor: pointer; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    transition: all 0.15s;
+  }
+  .pay:hover { border-color: var(--coral); }
+  .pay input { position: absolute; opacity: 0; pointer-events: none; }
+  .pay.selected { border-color: var(--coral-deep); background: var(--coral-soft); }
+  .pay .icon { font-size: 26px; }
+  .pay .name { font-weight: 800; font-size: 13px; }
+  .pay .sub { font-size: 11px; color: var(--ink-muted); }
+
+  /* Textarea */
+  textarea, input.txt {
+    width: 100%; border: 1px solid var(--pebble); border-radius: 12px;
+    padding: 12px 14px; font-size: 14px; font-family: inherit;
+    background: white; outline: none; resize: vertical;
+  }
+  textarea { min-height: 70px; }
+  textarea:focus, input.txt:focus { border-color: var(--coral); }
+
+  /* Tip */
+  .tip-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+  }
+  .tip {
+    padding: 14px 0; text-align: center;
+    border: 2px solid var(--cloud); border-radius: 14px;
+    background: white; cursor: pointer; font-family: inherit;
+    font-weight: 800; font-size: 14px; transition: all 0.15s;
+  }
+  .tip:hover { border-color: var(--coral); }
+  .tip.selected { border-color: var(--coral-deep); background: var(--coral-soft); color: var(--coral-deep); }
+
+  /* Summary */
+  .summary {
+    background: white; border-radius: 24px; padding: 22px;
+    align-self: start; position: sticky; top: 24px;
+  }
+  .summary h2 { font-size: 17px; font-weight: 900; margin-bottom: 4px; }
+  .summary .restaurant { font-size: 13px; color: var(--ink-muted); margin-bottom: 16px; }
+  .sum-items {
+    display: flex; flex-direction: column; gap: 8px;
+    border-bottom: 1px solid var(--cloud); padding-bottom: 14px; margin-bottom: 14px;
+  }
+  .sum-empty { color: var(--ink-muted); font-size: 14px; text-align: center; padding: 20px 0; }
+  .sum-item {
+    display: flex; justify-content: space-between; gap: 8px; font-size: 13px;
+    align-items: start;
+  }
+  .sum-item .qty { color: var(--coral-deep); font-weight: 800; margin-right: 4px; }
+  .sum-item .notes { color: var(--ink-muted); font-size: 11px; display: block; margin-top: 2px; font-style: italic; }
+  .sum-totals { display: flex; flex-direction: column; gap: 6px; font-size: 14px; margin-bottom: 16px; }
+  .sum-totals .row { display: flex; justify-content: space-between; }
+  .sum-totals .row.total {
+    border-top: 1px solid var(--pebble); padding-top: 12px; margin-top: 6px;
+    font-size: 18px; font-weight: 900;
+  }
+  .sum-totals .free { color: var(--olive); font-weight: 700; }
+  .place-order {
+    width: 100%; padding: 14px 16px;
+    background: var(--coral-deep); color: var(--cream);
+    border: none; border-radius: 14px;
+    font-weight: 800; font-size: 15px; cursor: pointer; font-family: inherit;
+    transition: background 0.15s;
+  }
+  .place-order:hover:not(:disabled) { background: var(--coral); }
+  .place-order:disabled { opacity: 0.5; cursor: not-allowed; }
+  .terms {
+    font-size: 11px; color: var(--ink-muted); margin-top: 12px;
+    text-align: center; line-height: 1.5;
+  }
+  .terms a { color: var(--coral-deep); text-decoration: none; }
+
+  footer.site {
+    background: var(--ink); color: var(--pebble); padding: 28px 0; font-size: 13px;
+  }
+  footer.site .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .disclaimer { color: var(--saffron); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+
+  @media (max-width: 780px) {
+    .layout { grid-template-columns: 1fr; }
+    .summary { position: static; }
+    .demo .links { display: none; }
+    .pay-list { grid-template-columns: 1fr 1fr; }
+    .tip-row { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo">
+  <span class="label">Variant A · Warm</span>
+  <div class="links">
+    <a href="home.html">Αρχική</a>
+    <a href="stores.html">Μαγαζιά</a>
+    <a href="store.html">Πίτσα Ντι Νάπολη</a>
+    <a href="checkout.html" class="active">Checkout</a>
+    <a href="track.html">Tracking</a>
+  </div>
+  <a href="../index.html">← Όλες οι εκδοχές</a>
+</div>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="home.html" class="logo">
+      <img src="../assets/favicon.svg" alt="" class="logo-mark">
+      <span class="word">giapraki</span>
+    </a>
+    <div class="crumbs"><a href="stores.html">Μαγαζιά</a> · <a href="store.html">Πίτσα Ντι Νάπολη</a> · Ολοκλήρωση</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <h1>Ολοκλήρωση παραγγελίας</h1>
+    <div class="meta">Λίγα ακόμα και τελείωσε. Η πίτσα έρχεται.</div>
+  </div>
+
+  <div class="layout">
+    <div class="sections">
+
+      <section class="sec">
+        <h2><span class="num">1</span>Διεύθυνση παράδοσης</h2>
+        <div class="addr-card">
+          <div>
+            <div class="label">🏠 Σπίτι</div>
+            <div class="text">Παύλου Μελά 12, Κοζάνη 50100<br>3ος όροφος, κουδούνι Παπαδόπουλος</div>
+          </div>
+          <button class="change-btn" type="button">Αλλαγή</button>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2><span class="num">2</span>Τρόπος πληρωμής</h2>
+        <div class="pay-list" role="radiogroup" aria-label="Πληρωμή">
+          <label class="pay selected">
+            <input type="radio" name="pay" value="card" checked>
+            <span class="icon" aria-hidden="true">💳</span>
+            <span class="name">Κάρτα</span>
+            <span class="sub">Visa · Mastercard</span>
+          </label>
+          <label class="pay">
+            <input type="radio" name="pay" value="cash">
+            <span class="icon" aria-hidden="true">💵</span>
+            <span class="name">Μετρητά</span>
+            <span class="sub">Στον οδηγό</span>
+          </label>
+          <label class="pay">
+            <input type="radio" name="pay" value="apple">
+            <span class="icon" aria-hidden="true">🍎</span>
+            <span class="name">Apple Pay</span>
+            <span class="sub">Touch ID / Face ID</span>
+          </label>
+          <label class="pay">
+            <input type="radio" name="pay" value="google">
+            <span class="icon" aria-hidden="true">G</span>
+            <span class="name">Google Pay</span>
+            <span class="sub">Άμεση πληρωμή</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2><span class="num">3</span>Οδηγίες παράδοσης <span class="opt">προαιρετικό</span></h2>
+        <textarea id="dlv-instructions" placeholder="Πχ. Άφησε το στην πόρτα. Μη χτυπάς το κουδούνι, το μωρό κοιμάται."></textarea>
+      </section>
+
+      <section class="sec">
+        <h2><span class="num">4</span>Ευχαριστήριο για τον οδηγό</h2>
+        <div class="tip-row" role="radiogroup" aria-label="Φιλοδώρημα">
+          <button type="button" class="tip" data-tip="0">Όχι</button>
+          <button type="button" class="tip selected" data-tip="1">€1</button>
+          <button type="button" class="tip" data-tip="2">€2</button>
+          <button type="button" class="tip" data-tip="3">€3</button>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2><span class="num">5</span>Σημείωση στον μαγαζάτορα <span class="opt">προαιρετικό</span></h2>
+        <textarea id="store-notes" placeholder="Πχ. Χωρίς κρεμμύδι παρακαλώ. Ψημένη καλά."></textarea>
+      </section>
+
+    </div>
+
+    <aside class="summary">
+      <h2>Παραγγελία σου</h2>
+      <div class="restaurant" id="cs-restaurant">από Πίτσα Ντι Νάπολη</div>
+
+      <div class="sum-items" id="cs-items">
+        <div class="sum-empty">Άδειο καλάθι. <a href="store.html" style="color:var(--coral-deep);">Διάλεξε φαγητό</a>.</div>
+      </div>
+
+      <div class="sum-totals" id="cs-totals">
+        <div class="row"><span>Υποσύνολο</span><span id="cs-subtotal">€0,00</span></div>
+        <div class="row"><span>Παράδοση</span><span id="cs-delivery" class="free">Δωρεάν</span></div>
+        <div class="row"><span>Φιλοδώρημα οδηγού</span><span id="cs-tip">€1,00</span></div>
+        <div class="row total"><span>Σύνολο</span><span id="cs-total">€1,00</span></div>
+      </div>
+
+      <button class="place-order" id="cs-place" type="button">Παραγγελία €0,00 ▸</button>
+      <p class="terms">Πατώντας «Παραγγελία», αποδέχεσαι τους <a href="#">Όρους Χρήσης</a> και την <a href="#">Πολιτική Απορρήτου</a>.</p>
+    </aside>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div>© 2026 giapraki · Φαγητό από τη γειτονιά</div>
+    <div class="disclaimer">Σχέδιο πρότασης · Variant A</div>
+  </div>
+</footer>
+
+<script src="../assets/cart.js"></script>
+<script>
+  // payment radio toggle
+  document.querySelectorAll('.pay').forEach((label) => {
+    const input = label.querySelector('input');
+    input.addEventListener('change', () => {
+      document.querySelectorAll('.pay').forEach((l) => l.classList.remove('selected'));
+      label.classList.add('selected');
+    });
+  });
+
+  // tip
+  let selectedTip = 1;
+  document.querySelectorAll('.tip').forEach((t) => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.tip').forEach((x) => x.classList.remove('selected'));
+      t.classList.add('selected');
+      selectedTip = parseFloat(t.dataset.tip);
+      renderSummary();
+    });
+  });
+
+  function fmt(n) {
+    return '€' + (Math.round(n * 100) / 100).toFixed(2).replace('.', ',');
+  }
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+
+  function renderSummary() {
+    const cart = window.GpCart;
+    if (!cart) return;
+    const items = cart.items;
+    const restaurant = cart.restaurant.name || 'Πίτσα Ντι Νάπολη';
+    document.getElementById('cs-restaurant').textContent = items.length ? `από ${restaurant}` : '';
+
+    const list = document.getElementById('cs-items');
+    if (items.length === 0) {
+      list.innerHTML = '<div class="sum-empty">Άδειο καλάθι. <a href="store.html" style="color:var(--coral-deep);">Διάλεξε φαγητό</a>.</div>';
+    } else {
+      list.innerHTML = items.map((it) => `
+        <div class="sum-item">
+          <span><span class="qty">${it.qty}×</span>${escapeHTML(it.name)}${it.notes ? `<span class="notes">«${escapeHTML(it.notes)}»</span>` : ''}</span>
+          <span><b>${fmt(it.price * it.qty)}</b></span>
+        </div>
+      `).join('');
+    }
+
+    const subtotal = cart.subtotal();
+    const dlv = cart.restaurant.deliveryFee || 0;
+    const tip = selectedTip;
+    const total = subtotal + dlv + tip;
+
+    document.getElementById('cs-subtotal').textContent = fmt(subtotal);
+    const dlvEl = document.getElementById('cs-delivery');
+    if (dlv > 0) { dlvEl.textContent = fmt(dlv); dlvEl.classList.remove('free'); }
+    else { dlvEl.textContent = 'Δωρεάν'; dlvEl.classList.add('free'); }
+    document.getElementById('cs-tip').textContent = tip > 0 ? fmt(tip) : '—';
+    document.getElementById('cs-total').textContent = fmt(total);
+
+    const btn = document.getElementById('cs-place');
+    btn.textContent = `Παραγγελία ${fmt(total)} ▸`;
+    btn.disabled = items.length === 0;
+  }
+
+  document.addEventListener('cart:change', renderSummary);
+  document.addEventListener('DOMContentLoaded', renderSummary);
+
+  // place order
+  document.getElementById('cs-place').addEventListener('click', () => {
+    const cart = window.GpCart;
+    if (!cart || cart.items.length === 0) return;
+
+    const subtotal = cart.subtotal();
+    const dlv = cart.restaurant.deliveryFee || 0;
+    const total = subtotal + dlv + selectedTip;
+    const id = String(4500 + Math.floor(Math.random() * 99));
+
+    const order = {
+      id,
+      items: cart.items.slice(),
+      restaurant: cart.restaurant.name,
+      subtotal,
+      delivery: dlv,
+      tip: selectedTip,
+      total,
+      payment: document.querySelector('.pay.selected input')?.value || 'card',
+      address: 'Παύλου Μελά 12, Κοζάνη 50100',
+      instructions: document.getElementById('dlv-instructions').value || '',
+      storeNotes: document.getElementById('store-notes').value || '',
+      placedAt: new Date().toISOString(),
+    };
+    localStorage.setItem(cart.ORDER_KEY || 'giapraki_last_order', JSON.stringify(order));
+    cart.clear();
+    window.location.href = 'track.html?id=' + id;
+  });
+</script>
+</body>
+</html>

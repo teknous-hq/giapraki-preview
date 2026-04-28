@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>giapraki · Brand preview — A & B</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<style>
+  :root {
+    --coral:#FF7A45; --coral-deep:#E85D2C; --coral-soft:#FFD5C2;
+    --saffron:#F4B942; --ink:#1F1A17; --ink-muted:#6B6660; --pebble:#D4CFC8;
+    --cream:#FFF8F0; --cloud:#FAF6F0;
+    --b-ink:#0F1115; --b-coral:#FF6B3D; --b-line:#E5E5E2; --b-bg:#F6F6F4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+  .wrap{max-width:1100px;margin:0 auto;padding:48px 24px}
+  header{display:flex;align-items:center;gap:16px;margin-bottom:48px}
+  header object{width:48px;height:48px}
+  h1{font-size:32px;font-weight:800;letter-spacing:-.02em}
+  .sub{color:var(--ink-muted);font-size:16px;margin-top:4px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px}
+  @media (max-width:780px){.grid{grid-template-columns:1fr}}
+  .card{border-radius:24px;overflow:hidden;border:1px solid var(--pebble);background:#fff;display:flex;flex-direction:column}
+  .card.b{border-color:var(--b-line);border-radius:12px}
+  .card-head{padding:24px}
+  .card.a .card-head{background:linear-gradient(135deg,#FF8F5C,#E85D2C);color:#fff}
+  .card.b .card-head{background:#fff;border-bottom:1px solid var(--b-line);color:var(--b-ink)}
+  .badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .card.a .badge{background:rgba(255,255,255,.25);color:#fff}
+  .card.b .badge{background:var(--b-bg);color:var(--b-ink)}
+  .card h2{font-size:24px;font-weight:800;letter-spacing:-.01em}
+  .card p{font-size:14px;margin-top:8px;opacity:.92}
+  .card.b p{color:#5C5F66}
+  .card-body{padding:20px 24px 24px;display:flex;flex-direction:column;gap:8px}
+  .links{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .links a{font-size:13px;font-weight:600;text-decoration:none;padding:8px 14px;border-radius:999px;border:1px solid var(--pebble);color:var(--ink);background:#fff;transition:transform .12s,background .12s}
+  .card.b .links a{border-color:var(--b-line);color:var(--b-ink);border-radius:8px}
+  .links a:hover{transform:translateY(-1px)}
+  .card.a .links a:hover{background:var(--coral-soft);border-color:var(--coral)}
+  .card.b .links a:hover{background:var(--b-ink);color:#fff;border-color:var(--b-ink)}
+  .open{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;text-decoration:none;padding:12px 20px;border-radius:14px;margin-top:12px;align-self:flex-start}
+  .card.a .open{background:var(--ink);color:var(--cream)}
+  .card.b .open{background:var(--b-coral);color:#fff;border-radius:8px}
+  .meta{display:flex;gap:16px;margin-top:18px;padding-top:18px;border-top:1px solid var(--pebble);font-size:12px;color:var(--ink-muted)}
+  .card.b .meta{border-top-color:var(--b-line);color:#5C5F66}
+  .preferred{position:absolute;top:14px;right:14px;background:var(--saffron);color:var(--ink);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:999px}
+  .card-wrap{position:relative}
+  footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--pebble);color:var(--ink-muted);font-size:13px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <object data="assets/logo.svg" type="image/svg+xml"></object>
+    <div>
+      <h1>giapraki · Brand preview</h1>
+      <p class="sub">Δύο αισθητικές κατευθύνσεις, ίδιο logo, ίδιο cart engine. Δοκίμασε όλη τη ροή — από τη γειτονιά μέχρι την παραγγελία.</p>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div class="card-wrap">
+      <span class="preferred">Προτιμώμενο</span>
+      <div class="card a">
+        <div class="card-head">
+          <span class="badge">A — Warm</span>
+          <h2>Ζεστή · παιγνιώδης</h2>
+          <p>Coral hero gradient, saffron accents, μεγάλες food photos. Ευχάριστο, friendly, welcoming.</p>
+        </div>
+        <div class="card-body">
+          <div class="links">
+            <a href="a/home.html">Αρχική</a>
+            <a href="a/stores.html">Εστιατόρια</a>
+            <a href="a/store.html">Μενού</a>
+            <a href="a/checkout.html">Παραγγελία</a>
+            <a href="a/track.html">Tracking</a>
+          </div>
+          <a class="open" href="a/home.html">Άνοιξε A ▸</a>
+          <div class="meta"><span>Coral #E85D2C</span><span>Saffron #F4B942</span><span>Cream bg</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-wrap">
+      <div class="card b">
+        <div class="card-head">
+          <span class="badge">B — Clean</span>
+          <h2>Καθαρή · editorial</h2>
+          <p>Λευκό, hairline borders, coral accent με μέτρο. Premium magazine — σύγχρονο, tasteful, αέρινο.</p>
+        </div>
+        <div class="card-body">
+          <div class="links">
+            <a href="b/home.html">Αρχική</a>
+            <a href="b/stores.html">Εστιατόρια</a>
+            <a href="b/store.html">Μενού</a>
+            <a href="b/checkout.html">Παραγγελία</a>
+            <a href="b/track.html">Tracking</a>
+          </div>
+          <a class="open" href="b/home.html">Άνοιξε B →</a>
+          <div class="meta"><span>Ink #0F1115</span><span>Coral #FF6B3D</span><span>White bg</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Σχέδιο πρότασης — όχι επίσημο site. Cart κρατιέται σε localStorage και είναι κοινό μεταξύ A/B.
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" font-family="'Inter', system-ui, sans-serif">
+  <defs>
+    <!-- coral gradient for primary mark -->
+    <linearGradient id="coral" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF8F5C"/>
+      <stop offset="100%" stop-color="#E85D2C"/>
+    </linearGradient>
+
+    <!-- Reusable logo mark — coral rounded square with stylized γ + leaf accent -->
+    <symbol id="mark" viewBox="0 0 200 200">
+      <rect width="200" height="200" rx="48" fill="url(#coral)"/>
+      <!-- stylized γ. Built from two strokes for the diagonal V + a curved descender that hooks like a furled leaf -->
+      <g stroke="#FFF8F0" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <!-- left arm of γ -->
+        <path d="M 55 60 L 100 115" stroke-width="22"/>
+        <!-- right arm of γ -->
+        <path d="M 145 60 L 100 115" stroke-width="22"/>
+        <!-- descender that curls into a leaf at the bottom -->
+        <path d="M 100 115 Q 100 145 90 158 Q 78 168 78 152 Q 78 138 95 132" stroke-width="22"/>
+      </g>
+      <!-- sage leaf accent dot (top right corner of the badge) -->
+      <circle cx="158" cy="42" r="14" fill="#7BB661"/>
+      <!-- subtle highlight curve on the badge top-left -->
+      <path d="M 18 60 Q 30 22 70 16" stroke="#FFF8F0" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.25"/>
+    </symbol>
+
+    <!-- monochrome variants -->
+    <symbol id="mark-dark" viewBox="0 0 200 200">
+      <rect width="200" height="200" rx="48" fill="#1F1A17"/>
+      <g stroke="#FFF8F0" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M 55 60 L 100 115" stroke-width="22"/>
+        <path d="M 145 60 L 100 115" stroke-width="22"/>
+        <path d="M 100 115 Q 100 145 90 158 Q 78 168 78 152 Q 78 138 95 132" stroke-width="22"/>
+      </g>
+      <circle cx="158" cy="42" r="14" fill="#FFF8F0"/>
+    </symbol>
+
+    <symbol id="mark-light" viewBox="0 0 200 200">
+      <rect width="200" height="200" rx="48" fill="#FFF8F0" stroke="#1F1A17" stroke-width="3"/>
+      <g stroke="#1F1A17" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M 55 60 L 100 115" stroke-width="22"/>
+        <path d="M 145 60 L 100 115" stroke-width="22"/>
+        <path d="M 100 115 Q 100 145 90 158 Q 78 168 78 152 Q 78 138 95 132" stroke-width="22"/>
+      </g>
+      <circle cx="158" cy="42" r="14" fill="#1F1A17"/>
+    </symbol>
+  </defs>
+
+  <rect width="1000" height="700" fill="#FFF8F0"/>
+
+  <text x="50" y="50" font-size="20" font-weight="700" fill="#1F1A17">giapraki — Logo System</text>
+  <text x="50" y="74" font-size="13" fill="#6B6660">Letter mark "γ" + leaf-curl descender + sage accent dot</text>
+
+  <!-- 1. Primary lockup -->
+  <g transform="translate(60, 120)">
+    <text x="0" y="0" font-size="11" font-weight="700" fill="#6B6660" letter-spacing="2">PRIMARY LOCKUP</text>
+    <use href="#mark" x="0" y="20" width="160" height="160"/>
+    <text x="190" y="100" font-size="78" font-weight="900" fill="#1F1A17" letter-spacing="-3">giapraki</text>
+    <text x="195" y="135" font-size="14" font-weight="600" fill="#E85D2C" letter-spacing="3">ΦΑΓΗΤΟ ΑΠΟ ΤΗΝ ΓΕΙΤΟΝΙΑ</text>
+  </g>
+
+  <!-- 2. Mark only -->
+  <g transform="translate(60, 320)">
+    <text x="0" y="0" font-size="11" font-weight="700" fill="#6B6660" letter-spacing="2">APP ICON · 200px</text>
+    <use href="#mark" x="0" y="20" width="160" height="160"/>
+  </g>
+
+  <!-- 3. Mono variants -->
+  <g transform="translate(280, 320)">
+    <text x="0" y="0" font-size="11" font-weight="700" fill="#6B6660" letter-spacing="2">MONO · DARK</text>
+    <use href="#mark-dark" x="0" y="20" width="160" height="160"/>
+  </g>
+
+  <g transform="translate(500, 320)">
+    <text x="0" y="0" font-size="11" font-weight="700" fill="#6B6660" letter-spacing="2">MONO · LIGHT</text>
+    <use href="#mark-light" x="0" y="20" width="160" height="160"/>
+  </g>
+
+  <!-- 4. Favicon scale demo -->
+  <g transform="translate(720, 320)">
+    <text x="0" y="0" font-size="11" font-weight="700" fill="#6B6660" letter-spacing="2">FAVICON SCALES</text>
+    <use href="#mark" x="0" y="20" width="64" height="64"/>
+    <text x="0" y="100" font-size="10" fill="#6B6660">64px</text>
+    <use href="#mark" x="76" y="20" width="32" height="32"/>
+    <text x="76" y="100" font-size="10" fill="#6B6660">32px</text>
+    <use href="#mark" x="120" y="20" width="16" height="16"/>
+    <text x="120" y="100" font-size="10" fill="#6B6660">16px</text>
+  </g>
+
+  <!-- 5. Horizontal compact (for header) -->
+  <g transform="translate(60, 540)">
+    <text x="0" y="0" font-size="11" font-weight="700" fill="#6B6660" letter-spacing="2">HEADER COMPACT</text>
+    <use href="#mark" x="0" y="20" width="56" height="56"/>
+    <text x="72" y="60" font-size="32" font-weight="900" fill="#1F1A17" letter-spacing="-1">giapraki</text>
+  </g>
+
+  <!-- 6. On dark surface -->
+  <g transform="translate(380, 540)">
+    <text x="0" y="0" font-size="11" font-weight="700" fill="#6B6660" letter-spacing="2">ON DARK SURFACE</text>
+    <rect x="0" y="20" width="280" height="80" rx="16" fill="#1F1A17"/>
+    <use href="#mark" x="20" y="32" width="56" height="56"/>
+    <text x="92" y="72" font-size="32" font-weight="900" fill="#FFF8F0" letter-spacing="-1">giapraki</text>
+  </g>
+
+  <!-- Construction note -->
+  <text x="720" y="560" font-size="10" font-weight="700" fill="#6B6660" letter-spacing="2">CONCEPT</text>
+  <text x="720" y="580" font-size="11" fill="#1F1A17">"γ" του γιαπρακιού — η ουρά</text>
+  <text x="720" y="595" font-size="11" fill="#1F1A17">τυλίγεται σαν φύλλο.</text>
+  <text x="720" y="615" font-size="11" fill="#1F1A17">Sage dot = αμπελόφυλλο</text>
+  <text x="720" y="630" font-size="11" fill="#1F1A17">accent. Coral CTA badge.</text>
+</svg>

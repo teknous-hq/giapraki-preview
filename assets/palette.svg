@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" font-family="'Inter', system-ui, sans-serif">
+  <rect width="900" height="600" fill="#FFF8F0"/>
+
+  <text x="60" y="60" font-size="32" font-weight="900" fill="#1F1A17" letter-spacing="-1">giapraki design tokens</text>
+  <text x="60" y="88" font-size="14" fill="#6B6660">Research-driven warm Mediterranean palette · 2026</text>
+
+  <!-- PRIMARY -->
+  <text x="60" y="135" font-size="11" font-weight="700" fill="#1F1A17" letter-spacing="2">PRIMARY · BRAND</text>
+  <g transform="translate(60, 150)">
+    <rect width="180" height="80" rx="16" fill="#FF7A45"/>
+    <text x="14" y="30" font-size="13" font-weight="700" fill="#FFF8F0">Coral</text>
+    <text x="14" y="50" font-size="11" fill="#FFF8F0" opacity="0.8">#FF7A45</text>
+    <text x="14" y="70" font-size="10" fill="#FFF8F0" opacity="0.7">CTA · brand</text>
+  </g>
+  <g transform="translate(250, 150)">
+    <rect width="120" height="80" rx="16" fill="#E85D2C"/>
+    <text x="14" y="30" font-size="13" font-weight="700" fill="#FFF8F0">Coral Deep</text>
+    <text x="14" y="50" font-size="11" fill="#FFF8F0" opacity="0.8">#E85D2C</text>
+    <text x="14" y="70" font-size="10" fill="#FFF8F0" opacity="0.7">hover</text>
+  </g>
+  <g transform="translate(380, 150)">
+    <rect width="120" height="80" rx="16" fill="#FFD5C2"/>
+    <text x="14" y="30" font-size="13" font-weight="700" fill="#1F1A17">Coral Soft</text>
+    <text x="14" y="50" font-size="11" fill="#1F1A17" opacity="0.7">#FFD5C2</text>
+    <text x="14" y="70" font-size="10" fill="#1F1A17" opacity="0.6">tints</text>
+  </g>
+
+  <!-- ACCENT -->
+  <text x="60" y="265" font-size="11" font-weight="700" fill="#1F1A17" letter-spacing="2">ACCENT · FRESHNESS</text>
+  <g transform="translate(60, 280)">
+    <rect width="180" height="80" rx="16" fill="#7BB661"/>
+    <text x="14" y="30" font-size="13" font-weight="700" fill="#FFF8F0">Sage</text>
+    <text x="14" y="50" font-size="11" fill="#FFF8F0" opacity="0.8">#7BB661</text>
+    <text x="14" y="70" font-size="10" fill="#FFF8F0" opacity="0.7">open · success</text>
+  </g>
+  <g transform="translate(250, 280)">
+    <rect width="120" height="80" rx="16" fill="#5C7A3D"/>
+    <text x="14" y="30" font-size="13" font-weight="700" fill="#FFF8F0">Olive</text>
+    <text x="14" y="50" font-size="11" fill="#FFF8F0" opacity="0.8">#5C7A3D</text>
+    <text x="14" y="70" font-size="10" fill="#FFF8F0" opacity="0.7">contrast</text>
+  </g>
+
+  <!-- HIGHLIGHT -->
+  <text x="510" y="265" font-size="11" font-weight="700" fill="#1F1A17" letter-spacing="2">HIGHLIGHT · PROMO</text>
+  <g transform="translate(510, 280)">
+    <rect width="180" height="80" rx="16" fill="#F4B942"/>
+    <text x="14" y="30" font-size="13" font-weight="700" fill="#1F1A17">Saffron</text>
+    <text x="14" y="50" font-size="11" fill="#1F1A17" opacity="0.7">#F4B942</text>
+    <text x="14" y="70" font-size="10" fill="#1F1A17" opacity="0.6">free · promo</text>
+  </g>
+  <g transform="translate(700, 280)">
+    <rect width="120" height="80" rx="16" fill="#D89A1F"/>
+    <text x="14" y="30" font-size="13" font-weight="700" fill="#FFF8F0">Saffron Deep</text>
+    <text x="14" y="50" font-size="11" fill="#FFF8F0" opacity="0.8">#D89A1F</text>
+    <text x="14" y="70" font-size="10" fill="#FFF8F0" opacity="0.7">on cream</text>
+  </g>
+
+  <!-- NEUTRALS -->
+  <text x="60" y="395" font-size="11" font-weight="700" fill="#1F1A17" letter-spacing="2">NEUTRALS · WARM SYSTEM</text>
+  <g transform="translate(60, 410)">
+    <rect width="120" height="80" rx="16" fill="#1F1A17"/>
+    <text x="14" y="30" font-size="13" font-weight="700" fill="#FFF8F0">Ink</text>
+    <text x="14" y="50" font-size="11" fill="#FFF8F0" opacity="0.8">#1F1A17</text>
+    <text x="14" y="70" font-size="10" fill="#FFF8F0" opacity="0.7">text</text>
+  </g>
+  <g transform="translate(190, 410)">
+    <rect width="120" height="80" rx="16" fill="#6B6660"/>
+    <text x="14" y="30" font-size="13" font-weight="700" fill="#FFF8F0">Ink Muted</text>
+    <text x="14" y="50" font-size="11" fill="#FFF8F0" opacity="0.8">#6B6660</text>
+    <text x="14" y="70" font-size="10" fill="#FFF8F0" opacity="0.7">secondary</text>
+  </g>
+  <g transform="translate(320, 410)">
+    <rect width="120" height="80" rx="16" fill="#D4CFC8"/>
+    <text x="14" y="30" font-size="13" font-weight="700" fill="#1F1A17">Pebble</text>
+    <text x="14" y="50" font-size="11" fill="#1F1A17" opacity="0.7">#D4CFC8</text>
+    <text x="14" y="70" font-size="10" fill="#1F1A17" opacity="0.6">borders</text>
+  </g>
+  <g transform="translate(450, 410)">
+    <rect width="120" height="80" rx="16" fill="#FAF6F0" stroke="#D4CFC8" stroke-width="1"/>
+    <text x="14" y="30" font-size="13" font-weight="700" fill="#1F1A17">Cloud</text>
+    <text x="14" y="50" font-size="11" fill="#1F1A17" opacity="0.7">#FAF6F0</text>
+    <text x="14" y="70" font-size="10" fill="#1F1A17" opacity="0.6">cards</text>
+  </g>
+  <g transform="translate(580, 410)">
+    <rect width="120" height="80" rx="16" fill="#FFF8F0" stroke="#D4CFC8" stroke-width="1"/>
+    <text x="14" y="30" font-size="13" font-weight="700" fill="#1F1A17">Cream</text>
+    <text x="14" y="50" font-size="11" fill="#1F1A17" opacity="0.7">#FFF8F0</text>
+    <text x="14" y="70" font-size="10" fill="#1F1A17" opacity="0.6">page bg</text>
+  </g>
+
+  <!-- SEMANTIC -->
+  <text x="60" y="525" font-size="11" font-weight="700" fill="#1F1A17" letter-spacing="2">SEMANTIC</text>
+  <g transform="translate(60, 540)">
+    <rect width="120" height="40" rx="12" fill="#16A34A"/>
+    <text x="14" y="26" font-size="12" font-weight="700" fill="#FFF8F0">Success</text>
+  </g>
+  <g transform="translate(190, 540)">
+    <rect width="120" height="40" rx="12" fill="#F59E0B"/>
+    <text x="14" y="26" font-size="12" font-weight="700" fill="#FFF8F0">Warning</text>
+  </g>
+  <g transform="translate(320, 540)">
+    <rect width="120" height="40" rx="12" fill="#DC2626"/>
+    <text x="14" y="26" font-size="12" font-weight="700" fill="#FFF8F0">Danger</text>
+  </g>
+  <g transform="translate(450, 540)">
+    <rect width="120" height="40" rx="12" fill="#0891B2"/>
+    <text x="14" y="26" font-size="12" font-weight="700" fill="#FFF8F0">Info</text>
+  </g>
+</svg>

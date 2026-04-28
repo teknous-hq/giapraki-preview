@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>giapraki · καλό φαγητό από τη γειτονιά</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../assets/style-b.css">
+<style>
+  /* ── Hero ──────────────────────────────────────────── */
+  .hero {
+    padding: 64px 0 48px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px;
+    align-items: center;
+  }
+  .hero h1 { margin-bottom: 20px; }
+  .hero h1 em { color: var(--coral); font-style: normal; }
+  .hero p.lede {
+    font-size: 18px; color: var(--ink-muted);
+    max-width: 480px; margin-bottom: 32px;
+  }
+  .hero-cta-row {
+    display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .hero-img {
+    aspect-ratio: 1/1; border-radius: var(--radius-lg); overflow: hidden;
+    background: var(--bg-soft);
+    background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=900&fit=crop');
+    background-size: cover; background-position: center;
+    border: 1px solid var(--border);
+  }
+  .hero-meta {
+    display: flex; gap: 28px; margin-top: 28px;
+    padding-top: 24px; border-top: 1px solid var(--border);
+    color: var(--ink-muted); font-size: 13px;
+  }
+  .hero-meta strong { display: block; color: var(--ink); font-size: 22px; font-weight: 800; letter-spacing: -1px; }
+
+  /* ── Categories (3-up) ─────────────────────────────── */
+  .cats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .cat {
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    overflow: hidden; transition: border-color .15s; color: var(--ink);
+  }
+  .cat:hover { border-color: var(--ink); }
+  .cat-img { aspect-ratio: 5/4; background: var(--bg-soft); background-size: cover; background-position: center; }
+  .cat-body { padding: 18px 20px 20px; display: flex; justify-content: space-between; align-items: center; }
+  .cat-name { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+  .cat-arrow { font-size: 18px; color: var(--ink-muted); }
+
+  /* ── Stores grid ───────────────────────────────────── */
+  .stores-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+  /* ── How it works ──────────────────────────────────── */
+  .how {
+    background: var(--bg-soft);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px; }
+  .how-step .num {
+    font-size: 12px; font-weight: 700; color: var(--coral);
+    letter-spacing: 1.2px; text-transform: uppercase;
+  }
+  .how-step h3 { margin: 8px 0 8px; font-size: 22px; letter-spacing: -0.6px; }
+  .how-step p { color: var(--ink-muted); font-size: 15px; line-height: 1.55; }
+
+  @media (max-width: 1000px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-img { aspect-ratio: 4/3; }
+    .cats { grid-template-columns: 1fr 1fr; }
+    .stores-grid { grid-template-columns: 1fr 1fr; }
+    .how-grid { grid-template-columns: 1fr; gap: 36px; }
+  }
+  @media (max-width: 560px) {
+    .cats, .stores-grid { grid-template-columns: 1fr; }
+    .hero-meta { flex-wrap: wrap; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="home.html" class="brand" aria-label="giapraki αρχική">
+      <object class="mark" data="../assets/favicon.svg" type="image/svg+xml" aria-hidden="true"></object>
+      <span class="word">giapraki</span>
+    </a>
+    <ul>
+      <li><a href="#">Γειτονιά</a></li>
+      <li><a href="stores.html">Εστιατόρια</a></li>
+      <li><a href="#how">Πώς λειτουργεί</a></li>
+      <li><a href="#">Σύνδεση</a></li>
+    </ul>
+    <div class="actions">
+      <a href="stores.html" class="btn btn-coral">Παράγγειλε <span aria-hidden="true">▸</span></a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Φαγητό από τη γειτονιά σου</span>
+      <h1 style="margin-top:14px;">Καλό φαγητό.<br>Από τη <em>γειτονιά</em>.<br>Σε λεπτά.</h1>
+      <p class="lede">Τοπικά εστιατόρια Κοζάνης. Παράδοση από οδηγούς που ξέρεις.
+        Καθαρές τιμές, χωρίς εκπλήξεις στον λογαριασμό.</p>
+      <form class="search-bar" onsubmit="event.preventDefault(); window.location='stores.html'">
+        <input type="text" placeholder="Διεύθυνση παράδοσης" value="Νικηφόρου 12" aria-label="Διεύθυνση">
+        <select aria-label="Πόλη">
+          <option>Κοζάνη</option>
+          <option>Πτολεμαΐδα</option>
+          <option>Σιάτιστα</option>
+        </select>
+        <button type="submit" class="btn btn-coral" style="margin-left:6px;">Δες εστιατόρια <span aria-hidden="true">▸</span></button>
+      </form>
+
+      <div class="hero-meta">
+        <div><strong>42</strong>εστιατόρια</div>
+        <div><strong>22′</strong>μέσος χρόνος</div>
+        <div><strong>4.8★</strong>μέσος βαθμός</div>
+      </div>
+    </div>
+    <div class="hero-img" role="img" aria-label="Σπιτικό φαγητό σε πιάτο"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Κατηγορίες</span>
+        <h2 style="margin-top:8px;">Από τι ψάχνεις διάθεση;</h2>
+      </div>
+      <a href="stores.html" class="btn btn-text">Όλες οι κατηγορίες <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="cats">
+      <a href="stores.html" class="cat">
+        <div class="cat-img" style="background-image:url('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&fit=crop');"></div>
+        <div class="cat-body">
+          <span class="cat-name">Πίτσα</span>
+          <span class="cat-arrow" aria-hidden="true">→</span>
+        </div>
+      </a>
+      <a href="stores.html" class="cat">
+        <div class="cat-img" style="background-image:url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&fit=crop');"></div>
+        <div class="cat-body">
+          <span class="cat-name">Burger</span>
+          <span class="cat-arrow" aria-hidden="true">→</span>
+        </div>
+      </a>
+      <a href="stores.html" class="cat">
+        <div class="cat-img" style="background-image:url('https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?w=800&fit=crop');"></div>
+        <div class="cat-body">
+          <span class="cat-name">Asian</span>
+          <span class="cat-arrow" aria-hidden="true">→</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Δημοφιλή τώρα</span>
+        <h2 style="margin-top:8px;">Εστιατόρια κοντά σου</h2>
+      </div>
+      <a href="stores.html" class="btn btn-text">Όλα <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="stores-grid">
+      <a href="store.html" class="tile">
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1571066811602-716837d681de?w=600&fit=crop');"></div>
+        <div class="tile-body">
+          <div class="tile-name">Pizza Roma</div>
+          <div class="tile-meta">Ιταλικά <span class="dot">·</span> ★ 4.8 <span class="dot">·</span> 25–35′</div>
+        </div>
+      </a>
+      <a href="store.html" class="tile">
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&fit=crop');"></div>
+        <div class="tile-body">
+          <div class="tile-name">Burger Garage</div>
+          <div class="tile-meta">Burgers <span class="dot">·</span> ★ 4.7 <span class="dot">·</span> 20–30′</div>
+        </div>
+      </a>
+      <a href="store.html" class="tile">
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&fit=crop');"></div>
+        <div class="tile-body">
+          <div class="tile-name">Σουβλάκι Τσουκνίδας</div>
+          <div class="tile-meta">Ελληνικά <span class="dot">·</span> ★ 4.9 <span class="dot">·</span> 15–25′</div>
+        </div>
+      </a>
+      <a href="store.html" class="tile">
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?w=600&fit=crop');"></div>
+        <div class="tile-body">
+          <div class="tile-name">Tokyo Bento</div>
+          <div class="tile-meta">Ασιατικά <span class="dot">·</span> ★ 4.6 <span class="dot">·</span> 30–40′</div>
+        </div>
+      </a>
+      <a href="store.html" class="tile">
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&fit=crop');"></div>
+        <div class="tile-body">
+          <div class="tile-name">Chicken House</div>
+          <div class="tile-meta">Κοτόπουλο <span class="dot">·</span> ★ 4.5 <span class="dot">·</span> 20–30′</div>
+        </div>
+      </a>
+      <a href="store.html" class="tile">
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&fit=crop');"></div>
+        <div class="tile-body">
+          <div class="tile-name">Πράσινο Πιάτο</div>
+          <div class="tile-meta">Σαλάτες <span class="dot">·</span> ★ 4.7 <span class="dot">·</span> 18–28′</div>
+        </div>
+      </a>
+      <a href="store.html" class="tile">
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&fit=crop');"></div>
+        <div class="tile-body">
+          <div class="tile-name">Coffee Lab</div>
+          <div class="tile-meta">Καφές <span class="dot">·</span> ★ 4.8 <span class="dot">·</span> 12–20′</div>
+        </div>
+      </a>
+      <a href="store.html" class="tile">
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&fit=crop');"></div>
+        <div class="tile-body">
+          <div class="tile-name">Sweet & Sour</div>
+          <div class="tile-meta">Επιδόρπια <span class="dot">·</span> ★ 4.6 <span class="dot">·</span> 15–25′</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="how section" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Πώς λειτουργεί</span>
+        <h2 style="margin-top:8px;">Τρία βήματα. Καμία έκπληξη.</h2>
+      </div>
+    </div>
+    <div class="how-grid">
+      <div class="how-step">
+        <span class="num">01 — Διάλεξε</span>
+        <h3>Βρες εστιατόριο της γειτονιάς</h3>
+        <p>Φιλτράρισε ανά κατηγορία ή απλά διάλεξε από τα πιο δημοφιλή κοντά σου.
+          Όλα τα εστιατόρια είναι τοπικά, επιλεγμένα ένα-ένα.</p>
+      </div>
+      <div class="how-step">
+        <span class="num">02 — Παράγγειλε</span>
+        <h3>Φτιάξε το γεύμα σου</h3>
+        <p>Επίλεξε πιάτα, πρόσθεσε σημειώσεις στον σεφ, πλήρωσε όπως σε βολεύει.
+          Καθαρές τιμές, χωρίς κρυμμένα.</p>
+      </div>
+      <div class="how-step">
+        <span class="num">03 — Παρέλαβε</span>
+        <h3>Στην πόρτα σου, ζεστό</h3>
+        <p>Δες live πού βρίσκεται ο οδηγός σου. Παράδοση από ντόπιους που ξέρουν
+          τη γειτονιά καλύτερα από κάθε χάρτη.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="home.html" class="brand" style="margin-bottom:14px;">
+          <object class="mark" data="../assets/favicon.svg" type="image/svg+xml" aria-hidden="true"></object>
+          <span class="word">giapraki</span>
+        </a>
+        <p class="muted" style="font-size:13px; max-width:280px; margin-top:12px;">
+          Καλό φαγητό από τη γειτονιά σου. Φτιαγμένο στην Κοζάνη.
+        </p>
+      </div>
+      <div>
+        <h5>Πλατφόρμα</h5>
+        <ul>
+          <li><a href="stores.html">Εστιατόρια</a></li>
+          <li><a href="#">Προσφορές</a></li>
+          <li><a href="#">Εφαρμογή</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Εταιρεία</h5>
+        <ul>
+          <li><a href="#">Σχετικά</a></li>
+          <li><a href="#">Επικοινωνία</a></li>
+          <li><a href="#">Συνεργαστείτε</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Πόλεις</h5>
+        <ul>
+          <li><a href="#">Κοζάνη</a></li>
+          <li><a href="#">Πτολεμαΐδα</a></li>
+          <li><a href="#">Σιάτιστα</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Νομικά</h5>
+        <ul>
+          <li><a href="#">Όροι χρήσης</a></li>
+          <li><a href="#">Απόρρητο</a></li>
+          <li><a href="#">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-disclaimer">
+      Σχέδιο πρότασης — preview για εσωτερική επισκόπηση. Όχι ζωντανή υπηρεσία.
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 giapraki</span>
+      <span>Made with care in Κοζάνη</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

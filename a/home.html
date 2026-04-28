@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<title>giapraki · Φαγητό από τη γειτονιά σου</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="giapraki — σχέδιο πρότασης. Παραγγελία φαγητού από τοπικά μαγαζιά της Κοζάνης.">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../assets/cart.css">
+<style>
+  :root {
+    --coral: #FF8F5C; --coral-deep: #E85D2C; --coral-soft: #FFD5C2;
+    --sage: #7BB661; --olive: #5C7A3D;
+    --saffron: #F4B942; --saffron-deep: #D89A1F;
+    --ink: #1F1A17; --ink-muted: #6B6660; --pebble: #D4CFC8;
+    --cloud: #FAF6F0; --cream: #FFF8F0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: var(--cream); color: var(--ink); line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+
+  /* preview demo strip */
+  .demo {
+    background: var(--ink); color: var(--cream); font-size: 12px;
+    padding: 8px 24px;
+    display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  }
+  .demo .label { color: var(--saffron); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .demo .links { display: flex; gap: 14px; }
+  .demo a { color: var(--pebble); text-decoration: none; }
+  .demo a.active { color: var(--coral); font-weight: 700; }
+  .demo a:hover { color: var(--cream); }
+
+  /* Header */
+  header.site {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--cream); border-bottom: 1px solid var(--pebble);
+  }
+  .nav { display: flex; align-items: center; gap: 16px; padding: 14px 0; }
+  .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); flex-shrink: 0; }
+  .logo-mark { width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0; }
+  .logo .word { font-size: 22px; font-weight: 900; letter-spacing: -1px; }
+  .city-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border-radius: 999px;
+    background: var(--cloud); border: 1px solid var(--pebble);
+    font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap;
+    color: var(--ink);
+  }
+  .city-pill:hover { border-color: var(--coral); color: var(--coral-deep); }
+  .header-search {
+    flex: 1; min-width: 200px; max-width: 520px;
+    background: white; border: 1px solid var(--pebble);
+    border-radius: 999px; padding: 4px 4px 4px 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .header-search input {
+    flex: 1; border: none; outline: none; padding: 8px 0; font-size: 14px;
+    background: transparent; font-family: inherit;
+  }
+  .header-search button {
+    background: var(--coral-deep); color: var(--cream);
+    border: none; padding: 8px 16px; border-radius: 999px;
+    font-weight: 700; font-size: 13px; cursor: pointer; font-family: inherit;
+  }
+  .header-search button:hover { background: var(--coral); }
+  .header-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .btn {
+    padding: 9px 18px; border-radius: 12px; font-weight: 700; font-size: 14px;
+    border: none; cursor: pointer; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: background 0.15s, color 0.15s; font-family: inherit;
+  }
+  .btn-primary { background: var(--coral-deep); color: var(--cream); }
+  .btn-primary:hover { background: var(--coral); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--pebble); }
+  .btn-ghost:hover { border-color: var(--coral); color: var(--coral-deep); }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #FF8F5C 0%, #E85D2C 100%);
+    padding: 72px 0 88px;
+    color: var(--cream);
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ""; position: absolute; right: -120px; top: -80px;
+    width: 460px; height: 460px; border-radius: 50%;
+    background: var(--saffron); opacity: 0.22;
+  }
+  .hero::after {
+    content: ""; position: absolute; left: -80px; bottom: -120px;
+    width: 320px; height: 320px; border-radius: 50%;
+    background: var(--coral-soft); opacity: 0.35;
+  }
+  .hero-inner {
+    display: grid; grid-template-columns: 1.15fr 1fr; gap: 48px;
+    align-items: center; position: relative; z-index: 1;
+  }
+  .hero h1 {
+    font-size: clamp(36px, 5.5vw, 60px);
+    font-weight: 900; letter-spacing: -2px; line-height: 1.02;
+    margin-bottom: 18px;
+  }
+  .hero h1 em {
+    font-style: normal; color: var(--saffron);
+    background: rgba(31, 26, 23, 0.12); padding: 0 8px; border-radius: 8px;
+  }
+  .hero p.lede {
+    font-size: 19px; opacity: 0.92; max-width: 540px; margin-bottom: 32px;
+  }
+  .hero-cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--ink); color: var(--cream);
+    padding: 16px 28px; border-radius: 14px;
+    font-size: 16px; font-weight: 800; text-decoration: none;
+    box-shadow: 0 12px 32px rgba(31, 26, 23, 0.25);
+    transition: transform 0.15s;
+  }
+  .hero-cta:hover { transform: translateY(-2px); }
+  .hero-cta .arrow { font-size: 18px; }
+  .hero-cta-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--cream); padding: 14px 22px; border-radius: 14px;
+    background: rgba(255, 248, 240, 0.18); text-decoration: none;
+    font-weight: 700;
+  }
+  .hero-cta-secondary:hover { background: rgba(255, 248, 240, 0.28); }
+  .hero-stats {
+    display: flex; gap: 24px; margin-top: 36px; flex-wrap: wrap;
+    font-size: 13px;
+  }
+  .hero-stat b { display: block; font-size: 22px; font-weight: 900; margin-bottom: 2px; }
+
+  .hero-photo {
+    position: relative;
+    aspect-ratio: 1/1;
+    max-width: 460px; justify-self: end;
+  }
+  .hero-photo .pic {
+    position: absolute; border-radius: 32px; overflow: hidden;
+    background-size: cover; background-position: center;
+    box-shadow: 0 24px 60px rgba(31, 26, 23, 0.3);
+  }
+  .hero-photo .pic-1 {
+    inset: 0 30% 30% 0;
+    background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&fit=crop');
+  }
+  .hero-photo .pic-2 {
+    width: 55%; height: 55%; right: 0; top: 8%;
+    background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&fit=crop');
+    transform: rotate(4deg);
+  }
+  .hero-photo .pic-3 {
+    width: 50%; height: 45%; right: 6%; bottom: 0;
+    background-image: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&fit=crop');
+    transform: rotate(-3deg);
+  }
+  .hero-photo .badge-float {
+    position: absolute; left: -12px; bottom: 10%;
+    background: var(--cream); color: var(--ink);
+    padding: 12px 16px; border-radius: 16px;
+    font-size: 13px; font-weight: 800; box-shadow: 0 12px 28px rgba(31,26,23,0.25);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .hero-photo .badge-float .dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--sage);
+    box-shadow: 0 0 0 3px rgba(123, 182, 97, 0.3);
+  }
+
+  /* Sections */
+  .section { padding: 56px 0; }
+  .section-head {
+    display: flex; align-items: end; justify-content: space-between;
+    margin-bottom: 24px; gap: 24px;
+  }
+  .section-title { font-size: 28px; font-weight: 900; letter-spacing: -1px; }
+  .section-sub { color: var(--ink-muted); font-size: 15px; margin-top: 2px; }
+  .see-all { color: var(--coral-deep); font-weight: 700; font-size: 14px; text-decoration: none; white-space: nowrap; }
+  .see-all:hover { text-decoration: underline; }
+
+  /* Category strip */
+  .cats {
+    display: grid; grid-template-columns: repeat(8, 1fr); gap: 16px;
+  }
+  .cat {
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--ink); cursor: pointer;
+  }
+  .cat-icon {
+    width: 88px; height: 88px; border-radius: 50%;
+    background: var(--cloud);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 38px;
+    border: 2px solid transparent; transition: all 0.18s;
+  }
+  .cat:hover .cat-icon { border-color: var(--coral); transform: translateY(-3px); background: var(--coral-soft); }
+  .cat-label { font-size: 13px; font-weight: 700; text-align: center; }
+  .cat-count { font-size: 11px; color: var(--ink-muted); }
+
+  /* Swimlane */
+  .swim {
+    display: grid; grid-auto-flow: column; grid-auto-columns: 320px;
+    gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory;
+    padding-bottom: 14px;
+    scrollbar-width: thin; scrollbar-color: var(--pebble) transparent;
+  }
+  .swim::-webkit-scrollbar { height: 8px; }
+  .swim::-webkit-scrollbar-thumb { background: var(--pebble); border-radius: 4px; }
+
+  .card {
+    background: white; border-radius: 24px; overflow: hidden;
+    box-shadow: 0 4px 14px rgba(31, 26, 23, 0.06);
+    transition: transform 0.18s, box-shadow 0.18s;
+    cursor: pointer; text-decoration: none; color: var(--ink);
+    display: block; scroll-snap-align: start;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 18px 44px rgba(31, 26, 23, 0.13); }
+  .card-img {
+    aspect-ratio: 16/10; background: var(--coral-soft);
+    background-size: cover; background-position: center; position: relative;
+  }
+  .badge {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--cream); color: var(--coral-deep);
+    padding: 5px 12px; border-radius: 999px; font-size: 11px; font-weight: 700;
+    box-shadow: 0 2px 6px rgba(31, 26, 23, 0.1);
+  }
+  .badge.sage { background: var(--sage); color: var(--cream); }
+  .badge.saffron { background: var(--saffron); color: var(--ink); }
+  .badge.ink { background: var(--ink); color: var(--cream); }
+  .heart {
+    position: absolute; top: 10px; right: 10px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255, 248, 240, 0.92);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 14px; cursor: pointer;
+  }
+  .card-body { padding: 16px 18px 20px; }
+  .card-name { font-size: 17px; font-weight: 800; margin-bottom: 4px; }
+  .card-desc { font-size: 13px; color: var(--ink-muted); margin-bottom: 12px; }
+  .card-meta {
+    display: flex; gap: 12px; align-items: center;
+    font-size: 12px; color: var(--ink-muted);
+    flex-wrap: wrap;
+  }
+  .card-meta .rating { color: var(--saffron-deep); font-weight: 700; }
+  .card-meta .free { color: var(--olive); font-weight: 700; }
+
+  /* Promotions banner */
+  .promo {
+    background: linear-gradient(115deg, var(--saffron) 0%, #FFD17A 100%);
+    color: var(--ink);
+    border-radius: 32px; padding: 40px 48px;
+    display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .promo::before {
+    content: ""; position: absolute; right: -60px; top: -60px;
+    width: 220px; height: 220px; border-radius: 50%; background: var(--coral); opacity: 0.45;
+  }
+  .promo > * { position: relative; z-index: 1; }
+  .promo .eyebrow {
+    font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--coral-deep); margin-bottom: 8px;
+  }
+  .promo h3 { font-size: clamp(24px, 3.5vw, 32px); font-weight: 900; letter-spacing: -1px; margin-bottom: 8px; }
+  .promo p { font-size: 15px; max-width: 480px; }
+  .promo .promo-cta {
+    background: var(--ink); color: var(--saffron);
+    padding: 14px 24px; border-radius: 14px; font-weight: 800;
+    text-decoration: none; white-space: nowrap;
+  }
+  .promo .promo-cta:hover { background: var(--coral-deep); color: var(--cream); }
+
+  /* Footer */
+  footer.site {
+    background: var(--ink); color: var(--pebble);
+    padding: 56px 0 32px; margin-top: 64px; font-size: 14px;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: 32px;
+    margin-bottom: 32px;
+  }
+  .footer-brand .logo .word { color: var(--cream); }
+  .footer-brand p { color: var(--pebble); margin-top: 12px; max-width: 280px; line-height: 1.6; }
+  footer.site h4 {
+    font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--saffron); margin-bottom: 12px;
+  }
+  footer.site ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  footer.site a { color: var(--pebble); text-decoration: none; }
+  footer.site a:hover { color: var(--cream); }
+  .footer-bot {
+    border-top: 1px solid rgba(212, 207, 200, 0.15);
+    padding-top: 20px; display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; color: var(--pebble); flex-wrap: wrap; gap: 12px;
+  }
+  .disclaimer {
+    font-size: 11px; color: var(--saffron); letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  /* Mobile */
+  @media (max-width: 980px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-photo { display: none; }
+    .cats { grid-template-columns: repeat(4, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    .demo .links { display: none; }
+    .nav { flex-wrap: wrap; gap: 10px; }
+    .header-search { order: 4; flex-basis: 100%; max-width: none; }
+    .header-actions .btn-primary { display: none; }
+    .section { padding: 40px 0; }
+    .promo { grid-template-columns: 1fr; padding: 32px 24px; }
+    .cats { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .cat-icon { width: 72px; height: 72px; font-size: 32px; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo">
+  <span class="label">Variant A · Warm</span>
+  <div class="links">
+    <a href="home.html" class="active">Αρχική</a>
+    <a href="stores.html">Μαγαζιά</a>
+    <a href="store.html">Πίτσα Ντι Νάπολη</a>
+    <a href="checkout.html">Checkout</a>
+    <a href="track.html">Tracking</a>
+  </div>
+  <a href="../index.html">← Όλες οι εκδοχές</a>
+</div>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="home.html" class="logo" aria-label="giapraki αρχική">
+      <img src="../assets/favicon.svg" alt="" class="logo-mark">
+      <span class="word">giapraki</span>
+    </a>
+    <button class="city-pill" aria-label="Αλλαγή πόλης">
+      <span aria-hidden="true">📍</span> Κοζάνη
+    </button>
+    <div class="header-search" role="search">
+      <input type="search" placeholder="Ψάξε μαγαζί ή πιάτο…" aria-label="Αναζήτηση">
+      <button type="button">Αναζήτηση</button>
+    </div>
+    <div class="header-actions">
+      <a href="#" class="btn btn-ghost">Σύνδεση</a>
+      <a href="#" class="btn btn-primary">Εγγραφή</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero" aria-label="Καλωσόρισες">
+  <div class="wrap hero-inner">
+    <div>
+      <h1>Φαγητό από τη <em>γειτονιά</em> σου, σε λεπτά.</h1>
+      <p class="lede">Διάλεξε από τοπικά μαγαζιά της Κοζάνης. Παράδοση από οδηγούς που ξέρεις. Χωρίς σπατάλη, με ζεστασιά.</p>
+      <div class="hero-cta-row">
+        <a href="stores.html" class="hero-cta">Δες τι κοντά σου <span class="arrow" aria-hidden="true">▸</span></a>
+        <a href="#how" class="hero-cta-secondary">Πώς δουλεύει</a>
+      </div>
+      <div class="hero-stats" aria-label="Στατιστικά">
+        <div class="hero-stat"><b>140+</b> τοπικά μαγαζιά</div>
+        <div class="hero-stat"><b>25′</b> μέση παράδοση</div>
+        <div class="hero-stat"><b>★ 4.8</b> εμπειρία</div>
+      </div>
+    </div>
+    <div class="hero-photo" aria-hidden="true">
+      <div class="pic pic-1"></div>
+      <div class="pic pic-2"></div>
+      <div class="pic pic-3"></div>
+      <div class="badge-float"><span class="dot"></span>Παίζει τώρα · 92 μαγαζιά</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2 class="section-title">Τι θέλεις να φας;</h2>
+        <p class="section-sub">Όλα έτοιμα · διάλεξε κατηγορία.</p>
+      </div>
+      <a href="stores.html" class="see-all">Όλες οι κατηγορίες ▸</a>
+    </div>
+    <nav class="cats" aria-label="Κατηγορίες φαγητού">
+      <a href="stores.html?cat=pizza" class="cat"><div class="cat-icon" aria-hidden="true">🍕</div><div class="cat-label">Πίτσα</div><div class="cat-count">38 μαγαζιά</div></a>
+      <a href="stores.html?cat=souvlaki" class="cat"><div class="cat-icon" aria-hidden="true">🥙</div><div class="cat-label">Σουβλάκι</div><div class="cat-count">22 μαγαζιά</div></a>
+      <a href="stores.html?cat=burger" class="cat"><div class="cat-icon" aria-hidden="true">🍔</div><div class="cat-label">Burger</div><div class="cat-count">18 μαγαζιά</div></a>
+      <a href="stores.html?cat=salad" class="cat"><div class="cat-icon" aria-hidden="true">🥗</div><div class="cat-label">Σαλάτα</div><div class="cat-count">14 μαγαζιά</div></a>
+      <a href="stores.html?cat=sushi" class="cat"><div class="cat-icon" aria-hidden="true">🍣</div><div class="cat-label">Sushi</div><div class="cat-count">7 μαγαζιά</div></a>
+      <a href="stores.html?cat=desserts" class="cat"><div class="cat-icon" aria-hidden="true">🍰</div><div class="cat-label">Γλυκά</div><div class="cat-count">21 μαγαζιά</div></a>
+      <a href="stores.html?cat=coffee" class="cat"><div class="cat-icon" aria-hidden="true">☕</div><div class="cat-label">Καφές</div><div class="cat-count">28 μαγαζιά</div></a>
+      <a href="stores.html?cat=vegan" class="cat"><div class="cat-icon" aria-hidden="true">🌱</div><div class="cat-label">Vegan</div><div class="cat-count">9 μαγαζιά</div></a>
+    </nav>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2 class="section-title">Νέα στην πόλη</h2>
+        <p class="section-sub">Φρέσκα μαγαζιά που μόλις άνοιξαν στην Κοζάνη.</p>
+      </div>
+      <a href="stores.html?new=1" class="see-all">Όλα τα νέα ▸</a>
+    </div>
+    <div class="swim" role="list">
+      <a href="store.html" class="card" role="listitem">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=600&fit=crop');">
+          <span class="badge saffron">Νέο</span>
+          <span class="heart" aria-label="Αγαπημένο">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Πίτσα Ντι Νάπολη</div>
+          <div class="card-desc">Ναπολετάνικη ζύμη · ξυλόφουρνος</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.7</span>
+            <span>(78)</span>
+            <span>· 25–35′</span>
+            <span class="free">· Δωρεάν</span>
+          </div>
+        </div>
+      </a>
+      <a href="store.html" class="card" role="listitem">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1540713434306-58505cf1b6fc?w=600&fit=crop');">
+          <span class="badge saffron">Νέο</span>
+          <span class="heart" aria-label="Αγαπημένο">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Falafel & Co</div>
+          <div class="card-desc">Vegan · Μεσογειακό · Pita</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.8</span>
+            <span>(54)</span>
+            <span>· 25–35′</span>
+            <span class="free">· Δωρεάν</span>
+          </div>
+        </div>
+      </a>
+      <a href="store.html" class="card" role="listitem">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=600&fit=crop');">
+          <span class="badge saffron">Νέο</span>
+          <span class="heart" aria-label="Αγαπημένο">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Sushi Wave</div>
+          <div class="card-desc">Φρέσκο sushi · maki & nigiri</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.6</span>
+            <span>(31)</span>
+            <span>· 35–45′</span>
+            <span>· €2.50</span>
+          </div>
+        </div>
+      </a>
+      <a href="store.html" class="card" role="listitem">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&fit=crop');">
+          <span class="badge saffron">Νέο</span>
+          <span class="heart" aria-label="Αγαπημένο">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Coffee Lab</div>
+          <div class="card-desc">Specialty καφές · freshly baked</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.9</span>
+            <span>(521)</span>
+            <span>· 15–25′</span>
+            <span class="free">· Δωρεάν</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2 class="section-title">Τα αγαπημένα της Κοζάνης</h2>
+        <p class="section-sub">Ψηφισμένα από τους πελάτες μας. Ποιοτικό φαγητό, σταθερά.</p>
+      </div>
+      <a href="stores.html?fav=1" class="see-all">Όλα τα αγαπημένα ▸</a>
+    </div>
+    <div class="swim" role="list">
+      <a href="store.html" class="card" role="listitem">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&fit=crop');">
+          <span class="badge sage">Ανοιχτό</span>
+          <span class="heart" aria-label="Αγαπημένο">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Σουβλάκι Τσουκνίδας</div>
+          <div class="card-desc">Καλαμάκια · γύρος · μερίδες</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.8</span>
+            <span>(412)</span>
+            <span>· 25–35′</span>
+            <span class="free">· Δωρεάν</span>
+          </div>
+        </div>
+      </a>
+      <a href="store.html" class="card" role="listitem">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&fit=crop');">
+          <span class="badge ink">−15%</span>
+          <span class="heart" aria-label="Αγαπημένο">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Burger District</div>
+          <div class="card-desc">Smashed burgers · κρεμώδες fries</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.7</span>
+            <span>(304)</span>
+            <span>· 25–35′</span>
+            <span>· €2.50</span>
+          </div>
+        </div>
+      </a>
+      <a href="store.html" class="card" role="listitem">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&fit=crop');">
+          <span class="badge sage">Ανοιχτό</span>
+          <span class="heart" aria-label="Αγαπημένο">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Chicken House</div>
+          <div class="card-desc">Φρέσκο κοτόπουλο · σπιτικές πατάτες</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.6</span>
+            <span>(198)</span>
+            <span>· 20–30′</span>
+            <span class="free">· Δωρεάν</span>
+          </div>
+        </div>
+      </a>
+      <a href="store.html" class="card" role="listitem">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&fit=crop');">
+          <span class="badge sage">Ανοιχτό</span>
+          <span class="heart" aria-label="Αγαπημένο">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Sweet Spot</div>
+          <div class="card-desc">Tarts · μπισκότα · παγωτό</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.9</span>
+            <span>(211)</span>
+            <span>· 20–30′</span>
+            <span>· €1.50</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;" id="how">
+  <div class="wrap">
+    <div class="promo">
+      <div>
+        <div class="eyebrow">Παίζει τώρα</div>
+        <h3>Τετάρτη −20% σε όλες τις πίτσες.</h3>
+        <p>Από Πίτσα Ντι Νάπολη, Pizza Roma, Mama's Kitchen και 12 ακόμα. Παράδοση μέχρι 23:00. Χωρίς κωδικό — εφαρμόζεται αυτόματα στο checkout.</p>
+      </div>
+      <a href="stores.html?cat=pizza" class="promo-cta">Πάμε στις πίτσες ▸</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="home.html" class="logo">
+          <img src="../assets/favicon.svg" alt="" class="logo-mark">
+          <span class="word">giapraki</span>
+        </a>
+        <p>Φαγητό από τη γειτονιά σου. Τοπικά μαγαζιά της Κοζάνης, οδηγοί που ξέρεις, χωρίς υπερβολικά commissions.</p>
+      </div>
+      <div>
+        <h4>Πληροφορίες</h4>
+        <ul>
+          <li><a href="#">Πώς δουλεύει</a></li>
+          <li><a href="#">Εγγραφή μαγαζιού</a></li>
+          <li><a href="#">Γίνε οδηγός</a></li>
+          <li><a href="#">Καριέρα</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Βοήθεια</h4>
+        <ul>
+          <li><a href="#">Συχνές ερωτήσεις</a></li>
+          <li><a href="#">Επικοινωνία</a></li>
+          <li><a href="#">Τα παράπονά μου</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Νομικά</h4>
+        <ul>
+          <li><a href="#">Όροι Χρήσης</a></li>
+          <li><a href="#">Πολιτική Απορρήτου</a></li>
+          <li><a href="#">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <div>© 2026 giapraki — Φαγητό από τη γειτονιά</div>
+      <div class="disclaimer">Σχέδιο πρότασης · Variant A</div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/cart.js"></script>
+</body>
+</html>

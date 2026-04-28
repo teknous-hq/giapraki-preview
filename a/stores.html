@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<title>giapraki · Μαγαζιά κοντά σου</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../assets/cart.css">
+<style>
+  :root {
+    --coral: #FF8F5C; --coral-deep: #E85D2C; --coral-soft: #FFD5C2;
+    --sage: #7BB661; --olive: #5C7A3D;
+    --saffron: #F4B942; --saffron-deep: #D89A1F;
+    --ink: #1F1A17; --ink-muted: #6B6660; --pebble: #D4CFC8;
+    --cloud: #FAF6F0; --cream: #FFF8F0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--cream); color: var(--ink); line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+  .demo {
+    background: var(--ink); color: var(--cream); font-size: 12px;
+    padding: 8px 24px;
+    display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  }
+  .demo .label { color: var(--saffron); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .demo .links { display: flex; gap: 14px; }
+  .demo a { color: var(--pebble); text-decoration: none; }
+  .demo a.active { color: var(--coral); font-weight: 700; }
+  .demo a:hover { color: var(--cream); }
+
+  header.site {
+    position: sticky; top: 0; z-index: 60;
+    background: var(--cream); border-bottom: 1px solid var(--pebble);
+  }
+  .nav { display: flex; align-items: center; gap: 16px; padding: 14px 0; }
+  .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); flex-shrink: 0; }
+  .logo-mark { width: 40px; height: 40px; }
+  .logo .word { font-size: 22px; font-weight: 900; letter-spacing: -1px; }
+  .city-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border-radius: 999px;
+    background: var(--cloud); border: 1px solid var(--pebble);
+    font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap;
+    color: var(--ink); font-family: inherit;
+  }
+  .city-pill:hover { border-color: var(--coral); color: var(--coral-deep); }
+  .header-search {
+    flex: 1; min-width: 200px; max-width: 520px;
+    background: white; border: 1px solid var(--pebble);
+    border-radius: 999px; padding: 4px 4px 4px 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .header-search input {
+    flex: 1; border: none; outline: none; padding: 8px 0; font-size: 14px;
+    background: transparent; font-family: inherit;
+  }
+  .header-search button {
+    background: var(--coral-deep); color: var(--cream);
+    border: none; padding: 8px 16px; border-radius: 999px;
+    font-weight: 700; font-size: 13px; cursor: pointer; font-family: inherit;
+  }
+  .header-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .btn {
+    padding: 9px 18px; border-radius: 12px; font-weight: 700; font-size: 14px;
+    border: none; cursor: pointer; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px; font-family: inherit;
+  }
+  .btn-primary { background: var(--coral-deep); color: var(--cream); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--pebble); }
+
+  /* Page */
+  .page-head { padding: 32px 0 16px; }
+  .page-head h1 { font-size: clamp(28px, 4vw, 38px); font-weight: 900; letter-spacing: -1.5px; }
+  .page-head .meta { color: var(--ink-muted); font-size: 15px; margin-top: 4px; }
+
+  .filter-bar {
+    position: sticky; top: 68px; z-index: 50;
+    background: var(--cream); padding: 12px 0;
+    border-bottom: 1px solid var(--pebble);
+  }
+  .filter-row {
+    display: flex; gap: 12px; align-items: center;
+    flex-wrap: nowrap; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .filter-row::-webkit-scrollbar { display: none; }
+  .filter-search {
+    flex-shrink: 0; min-width: 220px;
+    background: white; border: 1px solid var(--pebble);
+    border-radius: 999px; padding: 8px 16px;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px;
+  }
+  .filter-search input { border: none; outline: none; font-family: inherit; font-size: 13px; min-width: 0; flex: 1; }
+  .pill {
+    flex-shrink: 0;
+    padding: 9px 16px; border-radius: 999px;
+    background: white; border: 1px solid var(--pebble);
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    text-decoration: none; color: var(--ink);
+    white-space: nowrap; transition: all 0.15s; font-family: inherit;
+  }
+  .pill:hover { border-color: var(--coral); color: var(--coral-deep); }
+  .pill.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+  .sort {
+    margin-left: auto; flex-shrink: 0;
+    color: var(--ink-muted); font-size: 13px; font-weight: 600;
+    border: 1px solid var(--pebble); padding: 8px 14px; border-radius: 999px;
+    background: white; cursor: pointer; font-family: inherit;
+  }
+
+  /* Grid */
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px; padding: 28px 0 64px;
+  }
+  .card {
+    background: white; border-radius: 24px; overflow: hidden;
+    box-shadow: 0 4px 14px rgba(31, 26, 23, 0.06);
+    transition: transform 0.18s, box-shadow 0.18s;
+    cursor: pointer; text-decoration: none; color: var(--ink); display: block;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 18px 44px rgba(31, 26, 23, 0.13); }
+  .card-img {
+    aspect-ratio: 16/10; background: var(--coral-soft);
+    background-size: cover; background-position: center; position: relative;
+  }
+  .badge {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--cream); color: var(--coral-deep);
+    padding: 5px 12px; border-radius: 999px; font-size: 11px; font-weight: 700;
+  }
+  .badge.sage { background: var(--sage); color: var(--cream); }
+  .badge.saffron { background: var(--saffron); color: var(--ink); }
+  .badge.ink { background: var(--ink); color: var(--cream); }
+  .heart {
+    position: absolute; top: 10px; right: 10px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255, 248, 240, 0.92);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 14px; cursor: pointer;
+  }
+  .card-body { padding: 16px 18px 20px; }
+  .card-name { font-size: 17px; font-weight: 800; margin-bottom: 4px; }
+  .card-desc { font-size: 13px; color: var(--ink-muted); margin-bottom: 12px; }
+  .card-meta { display: flex; gap: 10px; font-size: 12px; color: var(--ink-muted); flex-wrap: wrap; }
+  .card-meta .rating { color: var(--saffron-deep); font-weight: 700; }
+  .card-meta .free { color: var(--olive); font-weight: 700; }
+  .card-meta-row {
+    border-top: 1px solid var(--cloud); padding-top: 10px; margin-top: 10px;
+    display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-muted);
+  }
+
+  footer.site {
+    background: var(--ink); color: var(--pebble);
+    padding: 32px 0; margin-top: 32px; font-size: 13px;
+  }
+  footer.site .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  footer.site a { color: var(--cream); text-decoration: none; margin-left: 18px; }
+  .disclaimer { color: var(--saffron); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+
+  @media (max-width: 640px) {
+    .demo .links { display: none; }
+    .nav { flex-wrap: wrap; gap: 10px; }
+    .header-search { order: 4; flex-basis: 100%; }
+    .header-actions .btn-primary { display: none; }
+    .filter-bar { top: 60px; }
+    .grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .card-body { padding: 12px 14px 16px; }
+    .card-name { font-size: 14px; }
+    .card-desc { font-size: 11px; }
+    .card-meta { font-size: 11px; }
+    .heart { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo">
+  <span class="label">Variant A · Warm</span>
+  <div class="links">
+    <a href="home.html">Αρχική</a>
+    <a href="stores.html" class="active">Μαγαζιά</a>
+    <a href="store.html">Πίτσα Ντι Νάπολη</a>
+    <a href="checkout.html">Checkout</a>
+    <a href="track.html">Tracking</a>
+  </div>
+  <a href="../index.html">← Όλες οι εκδοχές</a>
+</div>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="home.html" class="logo" aria-label="giapraki αρχική">
+      <img src="../assets/favicon.svg" alt="" class="logo-mark">
+      <span class="word">giapraki</span>
+    </a>
+    <button class="city-pill"><span aria-hidden="true">📍</span> Κοζάνη</button>
+    <div class="header-search" role="search">
+      <input type="search" placeholder="Ψάξε μαγαζί ή πιάτο…" aria-label="Αναζήτηση">
+      <button type="button">Αναζήτηση</button>
+    </div>
+    <div class="header-actions">
+      <a href="#" class="btn btn-ghost">Σύνδεση</a>
+      <a href="#" class="btn btn-primary">Εγγραφή</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap page-head">
+    <h1>Όλα τα μαγαζιά κοντά σου</h1>
+    <div class="meta">38 μαγαζιά · Κοζάνη, Νικηφόρου 12 · Παράδοση 25–45 λεπτά</div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="wrap filter-row">
+      <div class="filter-search">
+        <span aria-hidden="true">🔎</span>
+        <input type="search" placeholder="Όνομα μαγαζιού ή πιάτο…">
+      </div>
+      <a href="#" class="pill active">Όλα</a>
+      <a href="#" class="pill">⏱ Παίζει τώρα</a>
+      <a href="#" class="pill">📦 Δωρεάν παράδοση</a>
+      <a href="#" class="pill">⭐ Νέο</a>
+      <a href="#" class="pill">🍕 Πίτσα</a>
+      <a href="#" class="pill">🥙 Σουβλάκι</a>
+      <a href="#" class="pill">🍔 Burger</a>
+      <a href="#" class="pill">🥗 Σαλάτα</a>
+      <a href="#" class="pill">🍣 Sushi</a>
+      <a href="#" class="pill">🍰 Γλυκά</a>
+      <a href="#" class="pill">☕ Καφές</a>
+      <a href="#" class="pill">🌱 Vegan</a>
+      <button class="sort" aria-label="Ταξινόμηση">Συνιστώμενα ▾</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="grid">
+
+      <a href="store.html" class="card">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=600&fit=crop');">
+          <span class="badge saffron">Νέο</span>
+          <span class="heart">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Πίτσα Ντι Νάπολη</div>
+          <div class="card-desc">Ναπολετάνικη ζύμη · ξυλόφουρνος</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.7 (78)</span>
+            <span>· 25–35′</span>
+            <span class="free">· Δωρεάν</span>
+          </div>
+          <div class="card-meta-row"><span>Πίτσα · Ιταλικά</span><span>€10 ελάχ.</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="card">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&fit=crop');">
+          <span class="badge sage">Ανοιχτό</span>
+          <span class="heart">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Σουβλάκι Τσουκνίδας</div>
+          <div class="card-desc">Καλαμάκια · γύρος · μερίδες</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.8 (412)</span>
+            <span>· 25–35′</span>
+            <span class="free">· Δωρεάν</span>
+          </div>
+          <div class="card-meta-row"><span>Σουβλάκι · Ελληνικά</span><span>€8 ελάχ.</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="card">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&fit=crop');">
+          <span class="badge ink">−15%</span>
+          <span class="heart">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Burger District</div>
+          <div class="card-desc">Smashed burgers · κρεμώδες fries</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.7 (304)</span>
+            <span>· 25–35′</span>
+            <span>· €2.50</span>
+          </div>
+          <div class="card-meta-row"><span>Burger · American</span><span>€9 ελάχ.</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="card">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&fit=crop');">
+          <span class="badge sage">Ανοιχτό</span>
+          <span class="heart">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Chicken House</div>
+          <div class="card-desc">Φρέσκο κοτόπουλο · σπιτικές πατάτες</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.6 (198)</span>
+            <span>· 20–30′</span>
+            <span class="free">· Δωρεάν</span>
+          </div>
+          <div class="card-meta-row"><span>Κοτόπουλο · Comfort</span><span>€7 ελάχ.</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="card">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&fit=crop');">
+          <span class="badge saffron">−20% Τετάρτη</span>
+          <span class="heart">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Pizza Roma</div>
+          <div class="card-desc">Ρωμαϊκή τετράγωνη πίτσα</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.7 (286)</span>
+            <span>· 30–40′</span>
+            <span>· €2.50</span>
+          </div>
+          <div class="card-meta-row"><span>Πίτσα · Ιταλικά</span><span>€10 ελάχ.</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="card">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=600&fit=crop');">
+          <span class="badge saffron">Νέο</span>
+          <span class="heart">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Sushi Wave</div>
+          <div class="card-desc">Φρέσκο sushi · maki & nigiri</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.6 (31)</span>
+            <span>· 35–45′</span>
+            <span>· €2.50</span>
+          </div>
+          <div class="card-meta-row"><span>Sushi · Ασιατικά</span><span>€15 ελάχ.</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="card">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1540713434306-58505cf1b6fc?w=600&fit=crop');">
+          <span class="badge saffron">Νέο</span>
+          <span class="heart">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Falafel & Co</div>
+          <div class="card-desc">Vegan · Μεσογειακό · Pita</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.8 (54)</span>
+            <span>· 25–35′</span>
+            <span class="free">· Δωρεάν</span>
+          </div>
+          <div class="card-meta-row"><span>Vegan · Falafel</span><span>€8 ελάχ.</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="card">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&fit=crop');">
+          <span class="badge sage">Ανοιχτό</span>
+          <span class="heart">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Coffee Lab</div>
+          <div class="card-desc">Specialty καφές · freshly baked</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.9 (521)</span>
+            <span>· 15–25′</span>
+            <span class="free">· Δωρεάν</span>
+          </div>
+          <div class="card-meta-row"><span>Καφές · Bakery</span><span>€5 ελάχ.</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="card">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&fit=crop');">
+          <span class="badge sage">Ανοιχτό</span>
+          <span class="heart">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Πράσινο Πιρούνι</div>
+          <div class="card-desc">Vegan · σαλάτες · bowls</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.7 (142)</span>
+            <span>· 20–30′</span>
+            <span class="free">· Δωρεάν</span>
+          </div>
+          <div class="card-meta-row"><span>Σαλάτα · Vegan</span><span>€7 ελάχ.</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="card">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&fit=crop');">
+          <span class="badge sage">Ανοιχτό</span>
+          <span class="heart">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Sweet Spot</div>
+          <div class="card-desc">Tarts · μπισκότα · παγωτό</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.9 (211)</span>
+            <span>· 20–30′</span>
+            <span>· €1.50</span>
+          </div>
+          <div class="card-meta-row"><span>Γλυκά · Bakery</span><span>€5 ελάχ.</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="card">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&fit=crop');">
+          <span class="badge sage">Ανοιχτό</span>
+          <span class="heart">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Crêpe Bella</div>
+          <div class="card-desc">Γλυκές & αλμυρές κρέπες</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.5 (132)</span>
+            <span>· 20–30′</span>
+            <span>· €1.50</span>
+          </div>
+          <div class="card-meta-row"><span>Κρέπα · Γλυκά</span><span>€6 ελάχ.</span></div>
+        </div>
+      </a>
+
+      <a href="store.html" class="card">
+        <div class="card-img" style="background-image:url('https://images.unsplash.com/photo-1432139509613-5c4255815697?w=600&fit=crop');">
+          <span class="badge ink">Κλειστό · 18:00</span>
+          <span class="heart">♡</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Τα Καλά Παιδιά</div>
+          <div class="card-desc">Παραδοσιακή ταβέρνα · μαγειρευτά</div>
+          <div class="card-meta">
+            <span class="rating">★ 4.8 (367)</span>
+            <span>· Ανοίγει 18:00</span>
+            <span>· Δωρεάν</span>
+          </div>
+          <div class="card-meta-row"><span>Ελληνικά · Ταβέρνα</span><span>€10 ελάχ.</span></div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div>© 2026 giapraki · Φαγητό από τη γειτονιά</div>
+    <div class="disclaimer">Σχέδιο πρότασης · Variant A</div>
+    <div>
+      <a href="#">Όροι</a>
+      <a href="#">Πολιτική</a>
+      <a href="#">Επικοινωνία</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/cart.js"></script>
+</body>
+</html>

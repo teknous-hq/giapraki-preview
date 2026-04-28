@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<title>giapraki · Παρακολούθηση παραγγελίας</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../assets/cart.css">
+<style>
+  :root {
+    --coral: #FF8F5C; --coral-deep: #E85D2C; --coral-soft: #FFD5C2;
+    --sage: #7BB661; --olive: #5C7A3D;
+    --saffron: #F4B942; --saffron-deep: #D89A1F;
+    --ink: #1F1A17; --ink-muted: #6B6660; --pebble: #D4CFC8;
+    --cloud: #FAF6F0; --cream: #FFF8F0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--cream); color: var(--ink); line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+  .demo {
+    background: var(--ink); color: var(--cream); font-size: 12px;
+    padding: 8px 24px;
+    display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  }
+  .demo .label { color: var(--saffron); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .demo .links { display: flex; gap: 14px; }
+  .demo a { color: var(--pebble); text-decoration: none; }
+  .demo a.active { color: var(--coral); font-weight: 700; }
+
+  header.site { background: var(--cream); border-bottom: 1px solid var(--pebble); }
+  .nav { display: flex; align-items: center; gap: 16px; padding: 12px 0; }
+  .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); flex-shrink: 0; }
+  .logo-mark { width: 38px; height: 38px; }
+  .logo .word { font-size: 20px; font-weight: 900; letter-spacing: -1px; }
+  .crumbs { flex: 1; color: var(--ink-muted); font-size: 13px; }
+
+  /* Hero status */
+  .hero-status { padding: 32px 0 20px; }
+  .order-num {
+    font-size: 12px; color: var(--ink-muted);
+    letter-spacing: 2px; text-transform: uppercase; font-weight: 700;
+  }
+  .hero-status h1 {
+    font-size: clamp(28px, 4.5vw, 40px); font-weight: 900;
+    letter-spacing: -1.5px; margin: 6px 0 14px;
+  }
+  .eta-bar {
+    background: var(--coral-soft); color: var(--coral-deep);
+    padding: 14px 20px; border-radius: 16px;
+    display: inline-flex; align-items: center; gap: 12px;
+    font-weight: 700; font-size: 15px;
+  }
+  .eta-bar .pulse {
+    width: 10px; height: 10px; border-radius: 50%; background: var(--coral-deep);
+    box-shadow: 0 0 0 0 rgba(232, 93, 44, 0.6);
+    animation: heartbeat 1.4s ease-out infinite;
+  }
+  @keyframes heartbeat {
+    0% { box-shadow: 0 0 0 0 rgba(232, 93, 44, 0.7); }
+    70% { box-shadow: 0 0 0 12px rgba(232, 93, 44, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(232, 93, 44, 0); }
+  }
+
+  /* Map */
+  .map-card {
+    background: white; border-radius: 24px; overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 16px rgba(31, 26, 23, 0.06);
+  }
+  .map {
+    height: 240px;
+    background:
+      linear-gradient(135deg, #DDEBC5 0%, #F0F4E0 50%, #E8E2C8 100%);
+    position: relative; overflow: hidden;
+  }
+  .map svg { width: 100%; height: 100%; display: block; }
+  .map .grid-line { stroke: rgba(31, 26, 23, 0.08); stroke-width: 1; }
+  .map .road { stroke: rgba(31, 26, 23, 0.18); stroke-width: 8; fill: none; stroke-linecap: round; }
+  .map .road-thin { stroke: rgba(31, 26, 23, 0.12); stroke-width: 4; fill: none; stroke-linecap: round; }
+  .map .route { stroke: var(--coral-deep); stroke-width: 4; fill: none; stroke-linecap: round; stroke-dasharray: 8 6; animation: dash 1.5s linear infinite; }
+  @keyframes dash { to { stroke-dashoffset: -28; } }
+  .map .pin {
+    fill: white; stroke: var(--coral-deep); stroke-width: 3;
+  }
+  .map .pin-center { fill: var(--coral-deep); }
+  .map .driver {
+    fill: var(--ink); stroke: var(--saffron); stroke-width: 3;
+  }
+  .map-label {
+    position: absolute; padding: 4px 10px; border-radius: 999px;
+    background: white; font-size: 11px; font-weight: 800;
+    box-shadow: 0 4px 12px rgba(31, 26, 23, 0.15);
+  }
+
+  /* Steps */
+  .steps {
+    background: white; border-radius: 24px; padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 16px rgba(31, 26, 23, 0.06);
+  }
+  .step {
+    display: flex; gap: 16px; padding: 12px 0; position: relative;
+  }
+  .step:not(:last-child)::before {
+    content: ""; position: absolute; left: 19px; top: 44px; bottom: -12px;
+    width: 2px; background: var(--cloud);
+  }
+  .step.done:not(:last-child)::before { background: var(--sage); }
+  .step .dot {
+    flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+    background: var(--cloud); display: inline-flex;
+    align-items: center; justify-content: center;
+    font-size: 16px; color: var(--ink-muted); font-weight: 900;
+    border: 2px solid var(--cloud);
+  }
+  .step.done .dot { background: var(--sage); color: var(--cream); border-color: var(--sage); }
+  .step.active .dot {
+    background: var(--coral-deep); color: var(--cream); border-color: var(--coral-deep);
+    box-shadow: 0 0 0 6px var(--coral-soft);
+    animation: pulseDot 1.4s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { box-shadow: 0 0 0 6px var(--coral-soft); }
+    50% { box-shadow: 0 0 0 12px rgba(255, 143, 92, 0.18); }
+  }
+  .step .body { flex: 1; padding-top: 6px; }
+  .step .title { font-weight: 800; font-size: 15px; }
+  .step.active .title { color: var(--coral-deep); }
+  .step.upcoming .title { color: var(--ink-muted); }
+  .step .time { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+  .step.active .time { color: var(--coral-deep); font-weight: 600; }
+
+  /* Cards */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  .info-card {
+    background: white; border-radius: 24px; padding: 20px;
+    box-shadow: 0 4px 16px rgba(31, 26, 23, 0.06);
+  }
+  .info-card h3 {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--ink-muted); font-weight: 700; margin-bottom: 12px;
+  }
+  .courier { display: flex; align-items: center; gap: 14px; }
+  .avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--coral-soft); color: var(--coral-deep);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 900;
+  }
+  .courier .name { font-weight: 800; font-size: 16px; }
+  .courier .sub { font-size: 13px; color: var(--ink-muted); }
+  .call-btn {
+    margin-top: 14px; width: 100%; padding: 12px;
+    background: var(--ink); color: var(--saffron);
+    border: none; border-radius: 12px;
+    font-weight: 800; font-size: 13px; cursor: pointer; font-family: inherit;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .call-btn:hover { background: var(--coral-deep); color: var(--cream); }
+  .call-btn.ghost { background: var(--cloud); color: var(--ink); }
+  .call-btn.ghost:hover { background: var(--coral-soft); color: var(--coral-deep); }
+
+  /* Order summary collapsible */
+  .order-summary {
+    background: white; border-radius: 24px;
+    box-shadow: 0 4px 16px rgba(31, 26, 23, 0.06);
+    overflow: hidden;
+  }
+  .order-summary summary {
+    padding: 20px 24px; cursor: pointer; list-style: none;
+    display: flex; justify-content: space-between; align-items: center;
+    font-weight: 800;
+  }
+  .order-summary summary::-webkit-details-marker { display: none; }
+  .order-summary summary::after { content: "▾"; color: var(--ink-muted); transition: transform 0.18s; }
+  .order-summary[open] summary::after { transform: rotate(180deg); }
+  .order-summary .body { padding: 0 24px 22px; }
+  .restaurant { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+  .addr { font-size: 13px; color: var(--ink-muted); margin-bottom: 16px; }
+  .item-row {
+    display: flex; justify-content: space-between; gap: 8px; align-items: start;
+    font-size: 14px; padding: 6px 0;
+  }
+  .item-row .qty { color: var(--coral-deep); font-weight: 800; margin-right: 4px; }
+  .item-row .notes { color: var(--ink-muted); font-size: 11px; font-style: italic; display: block; margin-top: 2px; }
+  .total-row {
+    display: flex; justify-content: space-between;
+    border-top: 1px solid var(--pebble); padding-top: 12px; margin-top: 12px;
+    font-size: 16px; font-weight: 900;
+  }
+  .total-row.sub { font-size: 13px; font-weight: 600; color: var(--ink-muted); border-top: none; padding-top: 4px; margin-top: 4px; }
+
+  footer.site {
+    background: var(--ink); color: var(--pebble);
+    padding: 28px 0; margin-top: 48px; font-size: 13px;
+  }
+  footer.site .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .disclaimer { color: var(--saffron); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+
+  @media (max-width: 720px) {
+    .grid2 { grid-template-columns: 1fr; }
+    .demo .links { display: none; }
+    .map { height: 200px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo">
+  <span class="label">Variant A · Warm</span>
+  <div class="links">
+    <a href="home.html">Αρχική</a>
+    <a href="stores.html">Μαγαζιά</a>
+    <a href="store.html">Πίτσα Ντι Νάπολη</a>
+    <a href="checkout.html">Checkout</a>
+    <a href="track.html" class="active">Tracking</a>
+  </div>
+  <a href="../index.html">← Όλες οι εκδοχές</a>
+</div>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="home.html" class="logo">
+      <img src="../assets/favicon.svg" alt="" class="logo-mark">
+      <span class="word">giapraki</span>
+    </a>
+    <div class="crumbs">Παραγγελία <span id="hdr-order-id">#4521</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero-status">
+    <div class="order-num">Παραγγελία <span id="hero-order-id">#4521</span></div>
+    <h1 id="hero-title">Ετοιμάζουμε την παραγγελία σου 🍕</h1>
+    <div class="eta-bar"><span class="pulse" aria-hidden="true"></span>Άφιξη σε <b id="hero-eta">~22 λεπτά</b> · <span id="hero-arrival">21:34</span></div>
+  </section>
+
+  <section class="map-card" aria-label="Χάρτης παράδοσης">
+    <div class="map">
+      <svg viewBox="0 0 800 240" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Χάρτης διαδρομής οδηγού">
+        <!-- subtle grid -->
+        <g>
+          <line class="grid-line" x1="0" y1="60" x2="800" y2="60"/>
+          <line class="grid-line" x1="0" y1="120" x2="800" y2="120"/>
+          <line class="grid-line" x1="0" y1="180" x2="800" y2="180"/>
+          <line class="grid-line" x1="160" y1="0" x2="160" y2="240"/>
+          <line class="grid-line" x1="320" y1="0" x2="320" y2="240"/>
+          <line class="grid-line" x1="480" y1="0" x2="480" y2="240"/>
+          <line class="grid-line" x1="640" y1="0" x2="640" y2="240"/>
+        </g>
+        <!-- roads -->
+        <path class="road" d="M 0 130 L 800 130"/>
+        <path class="road" d="M 400 0 L 400 240"/>
+        <path class="road-thin" d="M 100 30 L 300 70 L 350 130"/>
+        <path class="road-thin" d="M 500 130 L 600 200 L 720 220"/>
+        <!-- route from store to home -->
+        <path class="route" d="M 130 150 Q 230 80 350 100 T 600 130 Q 660 165 670 200"/>
+        <!-- store pin (left) -->
+        <g transform="translate(130 150)">
+          <circle class="pin" r="14"/>
+          <circle class="pin-center" r="6"/>
+          <text x="0" y="4" text-anchor="middle" font-size="13" fill="white" font-weight="900">🍕</text>
+        </g>
+        <!-- driver (mid) -->
+        <g id="driver-pin" transform="translate(420 110)">
+          <circle r="16" class="driver"/>
+          <text x="0" y="5" text-anchor="middle" font-size="14" fill="var(--saffron)">🛵</text>
+        </g>
+        <!-- home pin (right) -->
+        <g transform="translate(670 200)">
+          <circle class="pin" r="14"/>
+          <circle class="pin-center" r="6"/>
+          <text x="0" y="4" text-anchor="middle" font-size="12" fill="white" font-weight="900">🏠</text>
+        </g>
+      </svg>
+      <div class="map-label" style="left:14px; top:14px;">🍕 Πίτσα Ντι Νάπολη</div>
+      <div class="map-label" style="right:14px; bottom:14px;">🏠 Παύλου Μελά 12</div>
+    </div>
+  </section>
+
+  <section class="steps" id="steps" aria-label="Κατάσταση παραγγελίας">
+    <div class="step done" data-step="0">
+      <div class="dot">✓</div>
+      <div class="body"><div class="title">Λάβαμε την παραγγελία σου</div><div class="time" id="t-step-0">21:08</div></div>
+    </div>
+    <div class="step active" data-step="1">
+      <div class="dot">🍳</div>
+      <div class="body"><div class="title">Ετοιμάζουμε</div><div class="time" id="t-step-1">21:12 → ~21:24</div></div>
+    </div>
+    <div class="step upcoming" data-step="2">
+      <div class="dot">🛵</div>
+      <div class="body"><div class="title">Στον δρόμο — έρχεται</div><div class="time" id="t-step-2">~21:25</div></div>
+    </div>
+    <div class="step upcoming" data-step="3">
+      <div class="dot">🏠</div>
+      <div class="body"><div class="title">Παραδόθηκε</div><div class="time" id="t-step-3">~21:34</div></div>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <div class="info-card">
+      <h3>Ο οδηγός σου</h3>
+      <div class="courier">
+        <div class="avatar" aria-hidden="true">ΓΚ</div>
+        <div>
+          <div class="name">Γιώργος Κ.</div>
+          <div class="sub">★ 4.9 · 1,240 παραδόσεις</div>
+        </div>
+      </div>
+      <button class="call-btn" type="button"><span aria-hidden="true">📞</span>Καλέστε τον οδηγό</button>
+    </div>
+
+    <div class="info-card">
+      <h3>Το μαγαζί</h3>
+      <div style="font-size:16px;font-weight:800;margin-bottom:4px;">Πίτσα Ντι Νάπολη</div>
+      <div style="font-size:13px;color:var(--ink-muted);">Πλατεία Νίκης 14, Κοζάνη</div>
+      <button class="call-btn ghost" type="button"><span aria-hidden="true">📞</span>24610 28xxx</button>
+    </div>
+  </div>
+
+  <details class="order-summary" open>
+    <summary>Λεπτομέρειες παραγγελίας</summary>
+    <div class="body">
+      <div class="restaurant" id="os-restaurant">Πίτσα Ντι Νάπολη</div>
+      <div class="addr" id="os-address">📍 Παύλου Μελά 12, Κοζάνη · 3ος όροφος, κουδούνι Παπαδόπουλος</div>
+
+      <div id="os-items">
+        <div class="item-row"><span><span class="qty">1×</span>Margherita Special</span><span>€9,50</span></div>
+      </div>
+
+      <div class="item-row total-row sub" id="os-subtotal-row" style="display:none;"><span>Υποσύνολο</span><span id="os-subtotal">€0,00</span></div>
+      <div class="item-row total-row sub" id="os-delivery-row"><span>Παράδοση</span><span id="os-delivery" style="color:var(--olive);font-weight:700;">Δωρεάν</span></div>
+      <div class="item-row total-row sub" id="os-tip-row"><span>Φιλοδώρημα οδηγού</span><span id="os-tip">€1,00</span></div>
+      <div class="total-row" id="os-total-row"><span id="os-total-label">Σύνολο · Κάρτα</span><span id="os-total">€10,50</span></div>
+    </div>
+  </details>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div>© 2026 giapraki · Φαγητό από τη γειτονιά</div>
+    <div class="disclaimer">Σχέδιο πρότασης · Variant A</div>
+  </div>
+</footer>
+
+<script src="../assets/cart.js"></script>
+<script>
+(function () {
+  function fmt(n) {
+    return '€' + (Math.round(n * 100) / 100).toFixed(2).replace('.', ',');
+  }
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function timeOffset(base, mins) {
+    const d = new Date(base.getTime() + mins * 60000);
+    return pad(d.getHours()) + ':' + pad(d.getMinutes());
+  }
+
+  // get id from query
+  const params = new URLSearchParams(location.search);
+  const idFromQuery = params.get('id');
+  const order = (() => {
+    try { return JSON.parse(localStorage.getItem('giapraki_last_order') || 'null'); }
+    catch (e) { return null; }
+  })();
+
+  const orderId = idFromQuery || (order && order.id) || '4521';
+  document.getElementById('hdr-order-id').textContent = '#' + orderId;
+  document.getElementById('hero-order-id').textContent = '#' + orderId;
+
+  // restaurant + address
+  if (order) {
+    document.getElementById('os-restaurant').textContent = order.restaurant || 'Πίτσα Ντι Νάπολη';
+    document.getElementById('os-address').textContent = '📍 ' + (order.address || 'Παύλου Μελά 12, Κοζάνη') +
+      (order.instructions ? ' · ' + order.instructions : ' · 3ος όροφος, κουδούνι Παπαδόπουλος');
+
+    const itemsBox = document.getElementById('os-items');
+    if (order.items && order.items.length) {
+      itemsBox.innerHTML = order.items.map((it) => `
+        <div class="item-row">
+          <span><span class="qty">${it.qty}×</span>${escapeHTML(it.name)}${it.notes ? `<span class="notes">«${escapeHTML(it.notes)}»</span>` : ''}</span>
+          <span>${fmt(it.price * it.qty)}</span>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('os-subtotal-row').style.display = 'flex';
+    document.getElementById('os-subtotal').textContent = fmt(order.subtotal || 0);
+    if (order.delivery > 0) {
+      document.getElementById('os-delivery').textContent = fmt(order.delivery);
+      document.getElementById('os-delivery').style.color = '';
+    }
+    document.getElementById('os-tip-row').style.display = order.tip > 0 ? 'flex' : 'none';
+    document.getElementById('os-tip').textContent = order.tip > 0 ? fmt(order.tip) : '—';
+
+    const payLabel = ({
+      card: 'Κάρτα', cash: 'Μετρητά στον οδηγό',
+      apple: 'Apple Pay', google: 'Google Pay'
+    })[order.payment] || 'Κάρτα';
+    document.getElementById('os-total-label').textContent = 'Σύνολο · ' + payLabel;
+    document.getElementById('os-total').textContent = fmt(order.total || 0);
+  }
+
+  // Timeline simulation: every 8s advance step
+  const placedAt = order && order.placedAt ? new Date(order.placedAt) : new Date();
+  // Build estimated times
+  const estimated = [
+    { offset: 0,  label: '' },   // received
+    { offset: 4,  label: '' },   // preparing
+    { offset: 17, label: '' },   // on the way
+    { offset: 26, label: '' },   // delivered
+  ];
+  estimated.forEach((s, i) => {
+    document.getElementById('t-step-' + i).textContent = (i === 1 ? timeOffset(placedAt, 4) + ' → ~' + timeOffset(placedAt, 16) : '~' + timeOffset(placedAt, s.offset));
+  });
+  document.getElementById('t-step-0').textContent = timeOffset(placedAt, 0);
+
+  const totalEta = 26;
+  document.getElementById('hero-arrival').textContent = timeOffset(placedAt, totalEta);
+
+  const stepEls = document.querySelectorAll('.step');
+  let currentStep = 1; // start at "preparing"
+  const titles = [
+    'Ετοιμάζουμε την παραγγελία σου 🍳',
+    'Ετοιμάζουμε την παραγγελία σου 🍕',
+    'Ο οδηγός φεύγει για εσένα 🛵',
+    'Παραδόθηκε — καλή σου όρεξη! 🍴',
+  ];
+  const etas = ['~22 λεπτά', '~14 λεπτά', '~6 λεπτά', 'Παραδόθηκε'];
+
+  function setStep(s) {
+    currentStep = Math.min(s, 3);
+    stepEls.forEach((el, i) => {
+      el.classList.remove('done', 'active', 'upcoming');
+      if (i < currentStep) el.classList.add('done');
+      else if (i === currentStep) el.classList.add('active');
+      else el.classList.add('upcoming');
+      const dot = el.querySelector('.dot');
+      if (el.classList.contains('done')) dot.textContent = '✓';
+      else if (i === 0) dot.textContent = '✓';
+      else if (i === 1) dot.textContent = '🍳';
+      else if (i === 2) dot.textContent = '🛵';
+      else if (i === 3) dot.textContent = '🏠';
+    });
+    document.getElementById('hero-title').textContent = titles[currentStep] || titles[0];
+    document.getElementById('hero-eta').textContent = etas[currentStep] || etas[0];
+    if (currentStep >= 3) {
+      const eta = document.querySelector('.eta-bar');
+      eta.style.background = 'rgba(123, 182, 97, 0.2)';
+      eta.style.color = 'var(--olive)';
+    }
+    // Animate driver pin position
+    const driver = document.getElementById('driver-pin');
+    if (driver) {
+      const positions = [
+        { x: 130, y: 150 },  // at store
+        { x: 230, y: 130 },  // preparing/leaving store
+        { x: 470, y: 110 },  // mid-route
+        { x: 670, y: 200 },  // arrived
+      ];
+      const p = positions[currentStep] || positions[0];
+      driver.setAttribute('transform', `translate(${p.x} ${p.y})`);
+      driver.style.transition = 'transform 0.8s ease-in-out';
+    }
+  }
+
+  // start
+  setStep(currentStep);
+
+  // auto-advance every 8s for demo
+  let interval = setInterval(() => {
+    if (currentStep >= 3) {
+      clearInterval(interval);
+      return;
+    }
+    setStep(currentStep + 1);
+  }, 8000);
+})();
+</script>
+</body>
+</html>
